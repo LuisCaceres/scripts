@@ -1,13 +1,12 @@
 var dialog = (function () {
     "use strict";
 
-    // 'previouslyFocusedElement' loses focus when the dialog window opens and it will 
-    // regain focus once the dialog window closes
+    // loses focus when the dialog opens and regains focus once the dialog closes
     var previouslyFocusedElement = null;
 
     var body = document.body;
 
-    // creates the dialog. At most, there is one instance per document.
+    // creates a dialog. At most, there is one dialog per document.
     var dialog = document.createElement('div');
     dialog.id = 'dialog';
     dialog.setAttribute('aria-describedby', 'dialog-description');
@@ -15,37 +14,25 @@ var dialog = (function () {
 
 
     Object.defineProperties(dialog, {
-        // sets the accessible description as required by ARIA
-        description: {
-            set: function (value) {
-                description.textContent = value;
-            }
-        },
-
-        // sets the accessible name as required by ARIA
-        name: {
-            set: function (value) {
-                name.textContent = value
-            }
-        },
-
         // toggles the visibility of the dialog
         open: {
             set: (function () {
                 var children = [];
 
                 return function (value) {
-                    // opens dialog window
-                    if (value === true) {
 
-                        // at this point the dialog and its contents must be the only perceivable elements in the document.
-                        // Iterates over the children of '<body>' and sets 'aria-hidden'
-                        // to 'true' as long as this attribute is not present
+                    if (value === true) {
+                        // opens the dialog 
+
+                        // at this point no elements should be perceivable other than the dialog and its 
+                        // contents. If still perceivable, all of the children of <body> (except the dialog) 
+                        // become unperceivable through the 'aria-hidden' attribute. 
                         Array.from(body.children).forEach(function (child) {
+
                             if (!child.getAttribute('aria-hidden')) {
                                 child.setAttribute('aria-hidden', true);
-                                // saves a reference to the children whose perceivability has been turned off. Once
-                                // the dialog closes these children will be perceivable again.
+                                // remembers which children should become perceivable after the dialog closes. This 
+                                // is in order to preserve the application state prior to the dialog opening.
                                 children.push(child);
                             }
                         });
@@ -53,27 +40,27 @@ var dialog = (function () {
                         // appends the dialog 
                         body.append(backdrop);
 
-                        // disables scrolling of <body> while the dialog window is open
+                        // disables scrolling of <body> while the dialog is open
                         body.style.overflowY = 'hidden';
 
-                        // sets focus to the first focusable element in tree order
+                        // sets focus to the first focusable element in the dialog (in tree order)
                         setTimeout(function () {
                             previouslyFocusedElement = document.activeElement;
-                            dialog.querySelector('a, button, input, textarea').focus();
+                            dialog.querySelector('a, button, input, select, textarea').focus();
                         }, 0);
                     }
 
-                    // closes dialog
+                    // closes the dialog
                     else if (value === false) {
-                        // please refer to comment on line 41
+                        // refer to comment on line 48
                         children.forEach(function (child) {child.removeAttribute('aria-hidden');});
                         backdrop.remove();
-                        noButton.remove();
+                        rejectionButton.remove();
 
-                        // reenables scrolling of <body>
+                        // enables scrolling of <body>
                         body.style.overflowY = '';
 
-                        // sets focus to the last focused element before the dialog window opened
+                        // the element that lost focus (because the dialog opened) is set focus again
                         setTimeout(function () {
                             previouslyFocusedElement.focus();
                         }, 0);
@@ -100,19 +87,19 @@ var dialog = (function () {
     backdrop.append(dialog);
 
 
-    // creates the yes button
-    var yesButton = document.createElement('button');
-    yesButton.className = "button primary";
-    yesButton.textContent = 'Ok';
-    // closes the dialog when clicked
-    yesButton.addEventListener('click', clickHandler);
+    // creates the fulfillment button
+    var fullfilmentButton = document.createElement('button');
+    fullfilmentButton.className = "button";
+    fullfilmentButton.textContent = 'Ok';
 
-    // creates the no button
-    var noButton = document.createElement('button');
-    noButton.className = "button secondary";
-    noButton.textContent = 'Cancel';
-    // closes the dialog when clicked
-    noButton.addEventListener('click', clickHandler);
+    // creates the rejection button
+    var rejectionButton = document.createElement('button');
+    rejectionButton.className = "button";
+    rejectionButton.textContent = 'Cancel';
+
+    // dialog closes when clicked 
+    fullfilmentButton.addEventListener('click', clickHandler);
+    rejectionButton.addEventListener('click', clickHandler);
 
     function clickHandler(event) {
         dialog.open = false;
@@ -122,46 +109,42 @@ var dialog = (function () {
 
     return {
 
-        // resembles 'window.alert()'
+        // mimics 'window.alert()'
         alert: function (/*name, description*/) {
             dialog.setAttribute('role', 'alertdialog');
-            dialog.name = arguments[0];
-            dialog.description = arguments[1];
-            dialog.append(yesButton);
+            name.textContent = arguments[0];
+            description.textContent = arguments[1];
+            dialog.append(fullfilmentButton);
             dialog.open = true;
         },
 
-        // resembles 'window.confirm()'
+        // mimics 'window.confirm()'
         confirm: function (/*name, description*/) {
             var self = this;
 
             dialog.setAttribute('role', 'dialog');
-            dialog.name = arguments[0];
-            dialog.description = arguments[1];
-            dialog.append(yesButton, noButton);
+            name.textContent = arguments[0];
+            description.textContent = arguments[1];
+            dialog.append(fullfilmentButton, rejectionButton);
             dialog.open = true;
 
-            yesButton.addEventListener('click', function clickHandler(event) {
+            fullfilmentButton.addEventListener('click', function clickHandler(event) {
                 self.onfulfilled();
-                yesButton.removeEventListener('click', clickHandler);
+                fullfilmentButton.removeEventListener('click', clickHandler);
             });
 
-            noButton.addEventListener('click', function clickHandler(event) {
+            rejectionButton.addEventListener('click', function clickHandler(event) {
                 self.onrejected();
-                noButton.removeEventListener('click', clickHandler);
+                rejectionButton.removeEventListener('click', clickHandler);
             });
         },
 
-        // called when 'yesButton' is pressed
+        // called when 'fullfilmentButton' is pressed
         onfulfilled: function(){},
 
-        // called when 'noButton' is pressed
+        // called when 'rejectionButton' is pressed
         onrejected: function(){}
     };
 
     return dialog;
 })();
-
-
-
-
