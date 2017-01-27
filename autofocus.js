@@ -57,11 +57,3 @@ to handle some of these situations. */
 
 /* NOTE: Upon opening a dialog window the first focusable descendant (in tree order) 
 must gain focus. The piece of code controlling this behaviour is found in dialog.js. */
-
-/* ISSUE 1: SEVERITY 2: Internet Explorer 11
-1. The currently focused element is removed from the DOM through a click.
-2. The application lacks a focused element.
-3. The application will not set focus to another element.
-*/
-
-

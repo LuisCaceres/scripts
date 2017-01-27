@@ -1,40 +1,51 @@
-/* Some widgets benefit from directional navigation keys (arrow keys, end, home). 
-The following piece of code identifies such widgets and enables directional navigation. */
-
+/* Composite widgets may implement directional navigation through certain keys 
+(arrow keys, end, home). A list of items is an example. The following piece of 
+code identifies such widgets and enables directional navigation. */
 
 (function () {
     'use strict';
 
-    // uses this string as a group of selectors to match against
-    var defaultFocusableElements = 'a, button, input, select, textarea';
+    // identifies a composite widget requiring directional navigation 
+    document.addEventListener('focus', function directionalNavigationDetector(event) {
+        var activeElement = document.activeElement;
 
-    // checks if 'element' and its siblings fit a pattern that lends itself for directional 
-    // navigation.
-    function allowsDirectionalNavigation(element) {
-        
-        if (element.matches(defaultFocusableElements) === false &&
-            element.hasAttribute('tabindex')) {
-            return true;
+        if (allowsDirectionalNavigation(activeElement)) {
+            // at this point the currently focused element may have a sibling to navigate to. 
+            // The program has to itarate over the siblings to verify this assertion.
+            siblings = new Iterator(activeElement.parentElement.children);
+            siblings.autoreset = true;
+            siblings.find(activeElement);
+
+            let sibling;
+            while (sibling = siblings.next()) {
+
+                if (allowsDirectionalNavigation(sibling)) {
+                    // at this point it is clear there is a sibling to navigate to.
+                    activeElement.addEventListener('blur', blurHandler);
+                    activeElement.addEventListener('keydown', keydownHandler);
+                    break;
+                }
+            }
         }
-        else {
-            return false;
-        }
+    }, true);
+
+    // identifies a composite widget requiring directional navigation
+    function allowsDirectionalNavigation(element) {    
+        return element.hasAttribute('tabindex') ? true : false;
     };
+
 
     var siblings = null;
 
 
-
-    // disables directional navigation 
     var blurHandler = function blurHandler(event) {
         this.removeEventListener('blur', blurHandler);
         this.removeEventListener('keydown', keydownHandler);
+        event.stopPropagation();
     }
 
 
-
-    // navigates forward or backwards to the next focusable sibling (if any) in terms 
-    // of directional navigation 
+    // navigates forward or backwards to a focusable (if any) 
     var keydownHandler = function keydownHandler(event) {
         var keyCode = event.keyCode,
             // key codes correspond to the left, up, right and down arrow keys
@@ -64,35 +75,4 @@ The following piece of code identifies such widgets and enables directional navi
             event.stopPropagation();
         }
     };
-
-
-
-
-    // enables directional navigation in a widget as long as the siblings of the currently
-    // focused element (and itself) fit a certain pattern. 
-    document.addEventListener('focus', function directionalNavigationDetector(event) {
-        var activeElement = document.activeElement;
-
-        if (allowsDirectionalNavigation(activeElement)) {
-            // at this point it seems the currently focused element may have siblings to navigate 
-            // to. Now, the program has to itarate over the siblings to verify if this the case.
-            siblings = new Iterator(activeElement.parentElement.children);
-            siblings.autoreset = true;
-            siblings.find(activeElement);
-
-            let sibling;
-            while (sibling = siblings.next()) {
-
-                if (allowsDirectionalNavigation(sibling)) {
-                    // at this point it is clear there is at least another sibling to navigate to.
-                    activeElement.addEventListener('blur', blurHandler);
-                    activeElement.addEventListener('keydown', keydownHandler);
-                    siblings.find(activeElement);
-                    break;
-                }
-            }
-        }
-    }, true);
 })();
-
-
