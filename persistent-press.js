@@ -28,14 +28,17 @@ of a new event type called 'persistentpress'. */
             event.target.dispatchEvent(persistentPressEvent);
             timer = null;
         }, DELAY);
+
+        document.addEventListener('click', clickHandler, true);
     }, true);
 
 
     // Primary pointer button is released from 'target'.
-    document.addEventListener('click', function (event) {
+    function clickHandler(event) {
         // There are two outcomes: a persistent press has occurred that prevents 'event'  
         // from reaching 'target'; or it didn't occur in which case the event flow remains 
         // unaffected
-        timer === null ? event.stopPropagation() : clearTimeout(timer); 
-    }, true);
+        timer === null ? event.stopPropagation() : clearTimeout(timer);
+        document.removeEventListener('click', clickHandler, true); 
+    }
 })();
