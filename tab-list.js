@@ -1,26 +1,23 @@
+/* An element marked with the role 'tablists' is a list of tab elements, which 
+are references to tabpanel elements. The following is an implements the behaviour
+of the roles 'tablist', 'tab' and 'tabpanel' as specified by the Accessible Rich
+Internet Applications (ARIA). */
+
 (function () {
     'use strict';
 
-    var tab = null;
- 
+    document.addEventListener('focus', function tabDetector(event) {
 
-
-
-    function toggle(tab) {
-        if (tab.getAttribute('aria-expanded') === 'false') {
-            tab.setAttribute('aria-expanded', 'true');
-            tab.nextElementSibling.setAttribute('aria-hidden', false);
+        if (document.activeElement.matches('[role="tab"]')) {
+            let tab = document.activeElement;
+            tab.addEventListener('blur', blurHandler);
+            tab.addEventListener('click', clickAndKeydownHandler);
+            tab.addEventListener('keydown', clickAndKeydownHandler);
         }
-        else {
-            tab.setAttribute('aria-expanded', 'false');
-            tab.nextElementSibling.setAttribute('aria-hidden', true);
-        }
-    }
+    }, true);
 
 
-
-
-    var blurHandler = function blurHandler() {
+    function blurHandler() {
         var tab = this;
         tab.removeEventListener('blur', blurHandler);
         tab.removeEventListener('click', clickAndKeydownHandler);
@@ -28,39 +25,24 @@
     }
 
 
+    // toggles the boolean value of the 'aria-expanded' attribute of a tab
+    function clickAndKeydownHandler(event) {
+        var type = event.type,
+            key = event.keyCode;
 
+        if (type === 'click' ||
+           (type === 'keydown' && (key === 13 || key === 32))) {
 
-    var clickAndKeydownHandler = function clickAndKeydownHandler(event) {
+            let tab = this,
+                val = this.getAttribute('aria-expanded') === 'true' ? false : true;
 
-        if (document.activeElement.matches('[role=tab]') === false) {
-            return;
-        }
+            this.setAttribute('aria-expanded', val);
 
-        let eventType = event.type,
-            keyCode = event.keyCode;
-
-        if (eventType === 'click' ||
-           (eventType === 'keydown' && (keyCode === 13 || keyCode === 32))) {
-            toggle(this);
             event.preventDefault();
             event.stopPropagation();
         }
     };
-
-
-
-
-    document.addEventListener('focus', function tabDetector(event) {
-
-        if (document.activeElement.matches('[role="tab"]')) {
-            tab = document.activeElement;
-            tab.addEventListener('blur', blurHandler);
-            tab.addEventListener('click', clickAndKeydownHandler);
-            tab.addEventListener('keydown', clickAndKeydownHandler);
-        }
-    }, true);
 })();
-
 
 /* NOTE: A <tablist> SHOULD not be a descendant of another <tablist>. 
 Unexpected behaviour may arise due to such a structure in the markup. */
