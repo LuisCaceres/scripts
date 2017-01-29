@@ -1,4 +1,70 @@
-// ChildNode.prototype.remove()
+// Element.prototype.append()
+// Document.prototype.append()
+// DocumentFragment.append()
+(function (prototypes) {
+
+    var df = document.createDocumentFragment();
+
+    function append() {
+        var nodes = Array.from(arguments);
+
+        nodes.forEach(function (node) {
+            node = node instanceof Node ? node : document.createTextNode(node);
+            df.appendChild(node);
+        });
+
+        this.appendChild(df);
+    }
+
+    prototypes.forEach(function (prototype) {
+        if (!('append' in prototype)) {
+            prototype.append = append;
+        }
+    });
+
+})([Element.prototype, Document.prototype, DocumentFragment.prototype]);
+
+
+
+
+// Element.prototype.closest()
+if (!('closest' in Element.prototype)) {
+    Element.prototype.closest = function (selector) {
+        var element = this;
+
+        while (element && element.nodeType === 1) {
+            if (element.matches(selector)) {
+                return element;
+            }
+
+            element = element.parentNode;
+        }
+
+        return null;
+    };
+}
+
+
+
+
+// Element.prototype.matches()
+if (!('matches' in Element.prototype)) {
+    Element.prototype.matches = Element.prototype.msMatchesSelector || function (selector) {
+        var elements = element.ownerDocument.querySelectorAll(selector);
+
+        var index = 0;
+        while (elements[index] && 
+               elements[index] !== element) {
+            ++index;
+        }
+
+        return Boolean(elements[index]);
+    };
+}
+
+
+
+// Element.prototype.remove()
 if (!('remove' in Element.prototype)) {
     Element.prototype.remove = function () {
         if (this.parentNode) {
@@ -10,71 +76,19 @@ if (!('remove' in Element.prototype)) {
 
 
 
-// ParentNode.prototype.append()
-(function (arr) {
-    arr.forEach(function (item) {
-        item.append = item.append || function () {
-            var argArr = Array.prototype.slice.call(arguments);
-            var docFrag = document.createDocumentFragment();
-
-            argArr.forEach(function (argItem) {
-                var isNode = Boolean(typeof (argItem) === 'object' && argItem !== null && argItem.nodeType > 0);
-                docFrag.appendChild(isNode ? argItem : document.createTextNode(String(argItem)));
-            });
-
-            this.appendChild(docFrag);
-        };
-    });
-})([Element.prototype, Document.prototype, DocumentFragment.prototype]);
-
-
-
-
-// Element.prototype.closest() and Element.prototype.matches()
-(function (ElementProto) {
-    if (typeof ElementProto.matches !== 'function') {
-        ElementProto.matches = ElementProto.msMatchesSelector || function matches(selector) {
-            var element = this;
-            var elements = (element.document || element.ownerDocument).querySelectorAll(selector);
-            var index = 0;
-
-            while (elements[index] && elements[index] !== element) {
-                ++index;
-            }
-
-            return Boolean(elements[index]);
-        };
-    }
-
-    if (typeof ElementProto.closest !== 'function') {
-        ElementProto.closest = function closest(selector) {
-            var element = this;
-
-            while (element && element.nodeType === 1) {
-                if (element.matches(selector)) {
-                    return element;
-                }
-
-                element = element.parentNode;
-            }
-
-            return null;
-        };
-    }
-})(window.Element.prototype);
-
-
-// NOTE: The implementation of Array.from is incomplete
-// Array.from 
-if (Array.from === undefined) {
+// NOTE: Implementation is incomplete.
+// Array.from() 
+if (!('from' in Array)) {
     Array.from = function (arrayLike) {
         return Array.prototype.slice.call(arrayLike);
     }
 }
 
 
-// Array.prototype.includes
-if (Array.prototype.includes === undefined) {
+
+// NOTE: Implementation has not been reviewed.
+// Array.prototype.includes()
+if (!('includes' in Array.prototype)) {
     Array.prototype.includes = function (searchElement, fromIndex) {
 
         // 1. Let O be ? ToObject(this value).
@@ -119,17 +133,3 @@ if (Array.prototype.includes === undefined) {
         return false;
     }
 }
-
-// QUESTION: Is there really a use case for this? Symbol cannot be polyfilled.
-// HTMLCollection.prototype[Symbol.iterator]
-/*
-if (typeof Symbol === 'function' && 
-    HTMLCollection.prototype[Symbol.iterator] === undefined) {
-    NodeList.prototype[Symbol.iterator] = function *values() {
-       var counter = 0;
-       while (counter < this.length) {
-           yield this[counter++];
-       }
-    }
-}
-*/
