@@ -1,3 +1,9 @@
+/* Queue is an abstract data structure, somewhat similar to Stacks. Unlike stacks, 
+a queue is open at both its ends. One end is always used to insert data (enqueue) 
+and the other is used to remove data (dequeue). This is an implementation of this 
+data structure. */
+
+
 var Queue = (function () {
     "use strict";
 
@@ -17,7 +23,6 @@ var Queue = (function () {
         this.onenqueue(value);
     };
 
-    // IMPLEMENT SOME SORT OF ADDEVENTLISTENER INTERFACE
     proto.onenqueue = function(){};
     proto.ondequeue = function(){};
 
@@ -25,7 +30,12 @@ var Queue = (function () {
 })();
 
 
-// when queue is full should we dequeue or enqueue first
+
+
+/* 'FixedQueue' extends 'Queue'. The main difference between instances of both constructors 
+is that the length of an instance of 'FixedQueue' is fixed. The fixed queue will automatically
+dequeue an item before enqueueing another one if the fixed queue is already full. */
+
 var FixedQueue = (function () {
     "use strict";
 
@@ -45,12 +55,9 @@ var FixedQueue = (function () {
         Queue.prototype.enqueue.call(this, value);
     }
 
-    // There does not seem to be a better way to disable access to this function from the parent
-    proto.dequeue = undefined;
+    proto.dequeue = function() {
+        throw Error('Illegal invocation.');
+    }
 
     return FixedQueue;
 })();
-
-
-
-
