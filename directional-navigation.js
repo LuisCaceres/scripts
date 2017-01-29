@@ -1,6 +1,7 @@
-/* Composite widgets may implement directional navigation through certain keys 
-(arrow keys, end, home). A list of items is an example. The following piece of 
-code identifies such widgets and enables directional navigation. */
+/* A composite widget may contain navigable descendants or owned children. To move 
+through the navigable descendants the user may press HOME, END, or the arrow keys.
+This is referred to as directional navigation. The following piece of enables directional
+navigation when required. */
 
 (function () {
     'use strict';
