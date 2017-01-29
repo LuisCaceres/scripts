@@ -1,7 +1,7 @@
 /* A composite widget may contain navigable descendants or owned children. To move 
-through the navigable descendants the user may press HOME, END, or the arrow keys.
-This is referred to as directional navigation. The following piece of enables directional
-navigation when required. */
+through the navigable descendants the user may press the HOME, END, or arrow keys.
+This is referred to as directional navigation. The following piece of code enables 
+directional navigation when required. */
 
 (function () {
     'use strict';
