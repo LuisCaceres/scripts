@@ -1,8 +1,7 @@
-/* Two dimensional navigation is used to allow the user to move focus between cells 
-in a grid. A grid is an interactive control which contains cells of tabular data 
-arranged in rows and columns, like a table. The following piece of code implements
-two dimensional navigation for a grid. */
-
+/* Two dimensional navigation allows the user to move focus between cells in a grid. 
+A grid is an interactive control which contains cells of tabular data arranged in 
+rows and columns, like a table. The following piece of code implements two dimensional 
+navigation for a grid. */
 
 (function () {
     'use strict';
@@ -34,6 +33,7 @@ two dimensional navigation for a grid. */
     };
 
 
+    // attempts to find an adjacent cell (if any) relative to the active cell
     var keydownHandler = function keydownHandler(event) {
         var target = event.target;
 
@@ -44,7 +44,6 @@ two dimensional navigation for a grid. */
             return;
         }
 
-        // stores a reference to all the cells in the grid
         let cells = new Iterator(target.parentElement.querySelectorAll('[role=gridcell]')),
             cell;
 
