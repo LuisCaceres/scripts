@@ -35,7 +35,7 @@ navigation for a grid. */
 
     // attempts to find an adjacent cell (if any) relative to the active cell
     var keydownHandler = function keydownHandler(event) {
-        var target = event.target;
+        var activeCell = event.target;
 
         var keyPressed = event.keyCode,
             keys = [END, HOME, LEFT, UP, RIGHT, DOWN];
@@ -44,7 +44,7 @@ navigation for a grid. */
             return;
         }
 
-        let cells = new Iterator(target.parentElement.querySelectorAll('[role=gridcell]')),
+        let cells = new Iterator(activeCell.parentElement.querySelectorAll('[role=gridcell]')),
             cell;
 
         if (keyPressed === END) {
@@ -56,24 +56,23 @@ navigation for a grid. */
         }
 
         else {
-            cells.find(target);
+            cells.find(activeCell);
             let method = keyPressed === LEFT || keyPressed === UP ? 'previous' : 'next';
             cell = cells[method]();
 
-            target = Rectangle.from(target);
+            activeCell = Rectangle.from(activeCell);
 
-            // attempts to find an adjacent cell to the active cell (in the direction specified 
-            // by the arrow key pressed)
+            // Iterates over the cells (in the direction specified by the arrow key pressed)
             while (cell) {
                 cell = Rectangle.from(cell);
-                let location = cell.locationFrom(target);
+                let location = cell.locationFrom(activeCell);
 
                 if ((location === 2 && keyPressed === UP) ||
                     (location === 8 && keyPressed === DOWN) ||
                     (location === 4 && keyPressed === LEFT) ||
                     (location === 6 && keyPressed === RIGHT)) {
                     cell = cells.current();
-                    target = event.target;
+                    activeCell = event.activeCell;
                     break;
                 }
 
@@ -85,14 +84,14 @@ navigation for a grid. */
                 // Realizes there's no more cells in the direction specified by the arrow key pressed.
                 // This is because the active cell is one of the outermost ones in the grid.
                 alert('hello world!');
-                cell = event.target;
+                cell = event.activeCell;
             }
             else {
                 // realizes an adjacent cell has been found. It will gain focus soon.
                 setTimeout(function () {
                     // swaps the values of the 'tabindex' attribute. A composite widget can 
                     // contain only one element with a 'tabindex' value of 0.
-                    target.tabIndex = -1;
+                    event.target.tabIndex = -1;
                     cell.tabIndex = 0;
                     cell.focus();
                 }, 0);
