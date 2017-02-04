@@ -62,8 +62,8 @@ var Rectangle = (function () {
     };
 
 
-    /* returns the distance along the x and y axes from the top-left corner of this rectangle relative
-    to the top-left corner of another rectangle. */
+    /* returns the distance along the x and y axes from the top-left corner of this 
+    instance relative to the top-left corner of another rectangle. */
     prototype.distanceFrom = function distanceFrom(rectangle) {
         return {
             x: Math.abs(rectangle.left - this.left),
