@@ -83,7 +83,7 @@ navigation for a grid. */
             if (!cell) {
                 // Realizes there's no more cells in the direction specified by the arrow key pressed.
                 // This is because the active cell is one of the outermost ones in the grid.
-                alert('hello world!');
+                console.log('No more cells in this direction! User may need to be alerted');
                 cell = event.activeCell;
             }
             else {
