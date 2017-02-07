@@ -1,0 +1,32 @@
+﻿@import "../../less/mixins";
+
+#backdrop {
+    display: flex;
+    height: 100%;
+
+    .minmax(12px, 160px);
+    padding: 24px @limits 0;
+      
+    background: rgba(0, 0, 0, 0.85);
+    position: fixed;
+    left: 0; 
+    right: 0; // IE11 fix to make the backdrop stretch the viewport width.
+    top: 0;
+    z-index: 1;
+    overflow-y: scroll;
+}
+
+#dialog {
+    background: white;
+    padding: 32px 32px 40px;
+    margin: auto;
+    position: relative; // this is to position close button
+
+    align-self: center; // IE11 fix in order to center flex items vertically.
+    flex: 0 1 650px; // IE11 fix in order to center flex items vertically.
+}
+
+#dialog-description {
+    white-space: pre-line;
+}
+

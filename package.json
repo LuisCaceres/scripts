@@ -28,6 +28,7 @@
     "grunt": "^1.0.1",
     "grunt-contrib-jade": "^1.0.0",
     "grunt-contrib-less": "^1.4.0",
+    "grunt-contrib-pug": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0"
   }
 }

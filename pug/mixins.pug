@@ -1,0 +1,29 @@
+mixin delete-button(config)
+	div(class = "delete-button js-delete-button"
+		role="button"
+		aria-controls = config['aria-controls'],
+		aria-labelledby = config['aria-labelledby'])
+		i.fa.fa-trash-o
+
+
+
+
+
+
+mixin css(name)
+	link( rel="stylesheet", href=`../${name}/${name}.css` )
+
+mixin script(name) 
+	script(src=`../${name}/${name}.js`)
+	
+mixin tab-and-tab-panel()
+	-console.log('inside');
+	.tab(tabindex="0", role="tab" aria-labelledby="label" aria-expanded="false")
+		block tab
+	.tab-panel(role="tabpanel")
+		block tab-panel
+
+
+
+
+

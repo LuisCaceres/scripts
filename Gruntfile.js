@@ -2,16 +2,6 @@
 in the future. That is what we call an update. An update will be hosted in a folder 
 whose name starts with the letter v (meaning version) followed by a number. The 
 frequency of such updates is not determined at this stage. */
-var version = 1.1;
-
-var paths = {
-    less: {
-        external: `../v${version}/less/**/*.less`,
-        internal: `input/less/**/*.less`
-    }
-}
-
-var less = paths.less;
 
 module.exports = function (grunt) {
 
@@ -20,32 +10,39 @@ module.exports = function (grunt) {
 
         less: {
             development: {
-                options: {
-                    paths: ['input/less', '../less']
-                },
                 files: [{
-                    src: [less.internal],
-                    dest: 'output/stylesheets',
+                    src: ['components/**/*.less'],
                     ext: '.css',
-                    expand: true,
-                    flatten: true
+                    expand: true
                 }]
             }
         },
+
+
+        pug: {
+            development: {
+                files: [{
+                    src: 'components/**/*.pug',
+                    expand: true,
+                    ext: '.html',
+                }]
+            }
+        },
+
 
         watch: {
             options: {
                 reload: true
             },
             less: {
-                files: [less.internal],
+                files: ['components/**/*.less'],
                 tasks: ['less']
+            },
+            pug: {
+                files: ['components/**/*.pug'],
+                tasks: ['pug']
             }
         }
-    });
-
-    grunt.registerTask('create browser host environment', function () {
-        require('./browser host environment.js');
     });
 
     grunt.registerTask('functions', function () {
@@ -54,6 +51,7 @@ module.exports = function (grunt) {
 
     // loads plugins
     grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('grunt-contrib-pug');
     grunt.loadNpmTasks('grunt-contrib-watch');
 
     // default task(s).

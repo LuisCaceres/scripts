@@ -1,0 +1,13 @@
+/* Passes a mathematical expression into a calc() function. This expression evaluates
+to a value between @min and @max. The value is generated at runtime and it depends
+on the width of the viewport. For example, consider a screen width between 320 
+and 1200 pixels and a minimum and maximum desired values of 1 and 100 pixels. At 
+320 pixels wide the value resulting from the expression is 1 pixel. At 1200 pixels 
+wide the value is 100px. Any intermediate screen width results in a value between 
+1px and 100px. */
+
+.minmax(@min, @max) {
+    /* 320px is assumed to be lowest value for the width of the viewport whereas 
+    1200px is the largest. */
+    @limits: calc( @min ~" + " unit(@max - @min) ~" * ((100vw - " 320px ~") /" unit(1200px - 320px) ~")" );
+}
