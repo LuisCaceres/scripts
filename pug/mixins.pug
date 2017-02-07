@@ -14,7 +14,7 @@ mixin css(name)
 	link( rel="stylesheet", href=`../${name}/${name}.css` )
 
 mixin script(name) 
-	script(src=`../${name}/${name}.js`)
+	script(src=`${name}/${name}.js`)
 	
 mixin tab-and-tab-panel()
 	-console.log('inside');
