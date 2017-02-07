@@ -24,7 +24,7 @@ var label = (function () {
         if (target) {
             string += 'To navigate through the list press the arrow keys. ';
         }
-
+         
         if (target) {
             string += 'To remove from the list press...';
         }
