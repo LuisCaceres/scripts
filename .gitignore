@@ -1,2 +1,3 @@
 *.jade
+/.vscode
 /node_modules
