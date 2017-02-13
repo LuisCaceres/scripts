@@ -2,16 +2,16 @@
 
 #backdrop {
     display: flex;
-    height: 100%;
-
+    
     .minmax(12px, 160px);
     padding: 24px @limits 0;
       
     background: rgba(0, 0, 0, 0.85);
     position: fixed;
     left: 0; 
-    right: 0; // IE11 fix to make the backdrop stretch the viewport width.
+    right: 0;
     top: 0;
+    bottom: 0;
     z-index: 1;
     overflow-y: scroll;
 }
@@ -29,4 +29,3 @@
 #dialog-description {
     white-space: pre-line;
 }
-
