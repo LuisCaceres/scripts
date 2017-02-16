@@ -222,7 +222,6 @@ global.document = new Document();
 
 
 
-
 class Element extends EventTarget {
     /**
      * Represents an element in an HTML or XML document.
@@ -289,7 +288,6 @@ class ParentElement extends EventTarget {
 }
 
 global.Element = Element;
-
 
 
 

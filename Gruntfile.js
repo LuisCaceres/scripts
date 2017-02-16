@@ -9,8 +9,8 @@ module.exports = function (grunt) {
                 separator: '\n\n\n\n',
             },
             dist: {
-                src: ['components/Browsing Context/*.js', '!components/Browsing Context/browsing context.js'],
-                dest: 'components/Browsing Context/browsing context.js',
+                src: 'components/browsing context/*/!(test).js',
+                dest: 'components/browsing context/browsing context.js',
             },
         },
 
