@@ -1,43 +1,58 @@
-/* Additions, removals and modifications of external less and pug files are expected 
-in the future. That is what we call an update. An update will be hosted in a folder 
-whose name starts with the letter v (meaning version) followed by a number. The 
-frequency of such updates is not determined at this stage. */
-
 module.exports = function (grunt) {
 
     // Project configuration.
     grunt.initConfig({
 
+        // Concatenates JavaScript files related to the browsing context feature.
+        concat: {
+            options: {
+                separator: '\n\n\n\n',
+            },
+            dist: {
+                src: ['components/Browsing Context/*.js', '!components/Browsing Context/browsing context.js'],
+                dest: 'components/Browsing Context/browsing context.js',
+            },
+        },
+
+        // Converts less files into CSS files.
         less: {
             development: {
                 files: [{
-                    src: ['components/**/*.less'],
+                    expand: true,
                     ext: '.css',
-                    expand: true
+                    src: ['components/**/*.less']
                 }]
             }
         },
 
-
+        // Converts pug files into HTML files.
         pug: {
             development: {
                 files: [{
-                    src: 'components/**/*.pug',
                     expand: true,
                     ext: '.html',
+                    src: 'components/**/*.pug',
                 }]
             }
         },
 
 
+        // Reacts to certain file modifications within the root folder.
         watch: {
             options: {
                 reload: true
             },
+
+            concat: {
+                files: ['components/Browsing Context/*.js', '!components/Browsing Context/browsing context.js'],
+                tasks: ['concat']
+            },
+
             less: {
                 files: ['components/**/*.less'],
                 tasks: ['less']
             },
+
             pug: {
                 files: ['components/**/*.pug'],
                 tasks: ['pug']
@@ -45,11 +60,13 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('functions', function () {
-        require('./node_modules/functions/Iterator.js');
-    });
+    // Introduces global varibles
+    // grunt.registerTask('functions', function () {
+    //     require('./node_modules/functions/Iterator.js');
+    // });
 
     // loads plugins
+    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-pug');
     grunt.loadNpmTasks('grunt-contrib-watch');
@@ -57,4 +74,3 @@ module.exports = function (grunt) {
     // default task(s).
     grunt.registerTask('default', ['watch']);
 };
-
