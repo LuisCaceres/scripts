@@ -15,7 +15,7 @@ of a new event type called 'persistentpress'. */
 
     // This is the mininum amount of time an element must be continuously pressed down
     // to trigger the event
-    var DELAY = 1000,
+    var DELAY = 10000,
         timer = null;
 
 
