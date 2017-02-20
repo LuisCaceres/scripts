@@ -56,7 +56,7 @@ class EventTarget {
         if (typeof listener !== "function") throw Error('"listener" is not of type function.');
 
         this.eventListenerList.add(...arguments);
-        // setTimeout(() => listener.call(this, new Event()), 0);    
+        setTimeout(() => listener.call(this, new Event()), random(0, 2000));    
     }
 
     /**
@@ -255,10 +255,7 @@ class Element extends EventTarget {
             right = random(left, left + 100);
 
         return {
-            top: top,
-            bottom: bottom,
-            left: left,
-            right: right,
+            top, bottom, left, right,
             width: Math.abs(right - left),
             height: Math.abs(bottom - top)
         };

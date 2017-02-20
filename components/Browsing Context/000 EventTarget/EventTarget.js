@@ -15,7 +15,7 @@ class EventTarget {
         if (typeof listener !== "function") throw Error('"listener" is not of type function.');
 
         this.eventListenerList.add(...arguments);
-        // setTimeout(() => listener.call(this, new Event()), 0);    
+        setTimeout(() => listener.call(this, new Event()), random(0, 2000));    
     }
 
     /**

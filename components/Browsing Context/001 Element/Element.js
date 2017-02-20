@@ -31,10 +31,7 @@ class Element extends EventTarget {
             right = random(left, left + 100);
 
         return {
-            top: top,
-            bottom: bottom,
-            left: left,
-            right: right,
+            top, bottom, left, right,
             width: Math.abs(right - left),
             height: Math.abs(bottom - top)
         };
