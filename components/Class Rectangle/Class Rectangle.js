@@ -73,3 +73,5 @@ var Rectangle = (function () {
 
     return Rectangle;
 })();
+
+if (typeof global !== 'undefined') global.Rectangle = Rectangle;
