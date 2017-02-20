@@ -1,4 +1,4 @@
-if (typeof window === 'undefined') require('./../../internet browser host environment.js');
+if (typeof window === 'undefined') require('./../Browsing Context/browsing context.js');
 
 
 /* Two dimensional navigation allows the user to move focus between cells in a grid. 
