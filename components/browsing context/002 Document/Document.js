@@ -1,4 +1,4 @@
-class Document extends EventTarget {
+class Document extends Node {
     /**
      * Represents the entire HTML or XML document. Conceptually, it is the root of the 
      * document tree, and provides the primary access to the document's data.

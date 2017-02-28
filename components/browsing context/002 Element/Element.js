@@ -1,4 +1,4 @@
-class Element extends EventTarget {
+class Element extends Node {
     /**
      * Represents an element in an HTML or XML document.
      */
