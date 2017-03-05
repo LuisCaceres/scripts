@@ -5,6 +5,7 @@ class Document extends Node {
      */
     constructor() {
         super();
+        this.body = new Element();
     }
 
     /**
@@ -52,4 +53,3 @@ class Document extends Node {
 
 
 global.Document = Document;
-global.document = new Document();

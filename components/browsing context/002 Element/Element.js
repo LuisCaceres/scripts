@@ -1,24 +1,12 @@
+/**
+ * Represents an element in an HTML or XML document.
+ */
 class Element extends Node {
-    /**
-     * Represents an element in an HTML or XML document.
-     */
-    constructor() {
-        super();
-        this.parentElement = new ParentElement();
-    }
 
     /**
      * Focuses the element.
      */
-    focus() {
-        if (typeof type !== 'string') throw Error('"type" is not of type string.');
-        if (typeof bubbles !== 'boolean') throw Error('"bubbles" is not of type boolean.');
-        if (typeof cancelable !== 'boolean') throw Error('"cancelable" is not of type boolean.');
-
-        this.type = type;
-        this.bubbles = bubbles;
-        this.cancelable = cancelable;
-    }
+    focus() {}
 
     /**
      * Returns the size of an element and its position relative to the viewport.
@@ -51,13 +39,5 @@ class Element extends Node {
 
 Element.prototype.querySelector = Document.prototype.querySelector;
 Element.prototype.querySelectorAll = Document.prototype.querySelectorAll;
-
-
-// ParentElement Interface (ficticious)
-class ParentElement extends EventTarget {
-    constructor() {
-        super();
-    }
-}
 
 global.Element = Element;

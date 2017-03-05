@@ -281,7 +281,30 @@ global.Node = Node;
 
 
 
-class NodeList extends Array {}
+var NodeList = (function () {
+    'use strict';
+    
+    var traps = {
+        set(obj, prop, val) {
+            if (Number.isNaN(+prop) && prop !== 'length') {
+                obj[prop] = val;
+            }
+        }
+    }
+
+    class NodeList {
+        constructor(...items) {
+            Array.prototype.push.apply(this, items);
+            Object.freeze(this);
+        }
+
+    }
+
+    NodeList.prototype.forEach = Array.prototype.forEach;
+    NodeList.prototype.splice = function(){};
+
+    return NodeList;
+})();
 
 global.NodeList = NodeList;
 
@@ -294,6 +317,7 @@ class Document extends Node {
      */
     constructor() {
         super();
+        this.body = new Element();
     }
 
     /**
@@ -341,31 +365,18 @@ class Document extends Node {
 
 
 global.Document = Document;
-global.document = new Document();
 
 
 
+/**
+ * Represents an element in an HTML or XML document.
+ */
 class Element extends Node {
-    /**
-     * Represents an element in an HTML or XML document.
-     */
-    constructor() {
-        super();
-        this.parentElement = new ParentElement();
-    }
 
     /**
      * Focuses the element.
      */
-    focus() {
-        if (typeof type !== 'string') throw Error('"type" is not of type string.');
-        if (typeof bubbles !== 'boolean') throw Error('"bubbles" is not of type boolean.');
-        if (typeof cancelable !== 'boolean') throw Error('"cancelable" is not of type boolean.');
-
-        this.type = type;
-        this.bubbles = bubbles;
-        this.cancelable = cancelable;
-    }
+    focus() {}
 
     /**
      * Returns the size of an element and its position relative to the viewport.
@@ -399,14 +410,6 @@ class Element extends Node {
 Element.prototype.querySelector = Document.prototype.querySelector;
 Element.prototype.querySelectorAll = Document.prototype.querySelectorAll;
 
-
-// ParentElement Interface (ficticious)
-class ParentElement extends EventTarget {
-    constructor() {
-        super();
-    }
-}
-
 global.Element = Element;
 
 
@@ -423,3 +426,7 @@ function random(min, max) {
     }
     return min + Math.floor(Math.random() * (max - min + 1));
 };
+
+// this should be the very last line of code as the execution of the following 
+// depends on the availability (non-undefined) classes.
+global.document = new Document();
