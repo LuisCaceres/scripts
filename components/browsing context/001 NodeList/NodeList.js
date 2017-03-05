@@ -1,14 +1,6 @@
 var NodeList = (function () {
     'use strict';
     
-    var traps = {
-        set(obj, prop, val) {
-            if (Number.isNaN(+prop) && prop !== 'length') {
-                obj[prop] = val;
-            }
-        }
-    }
-
     class NodeList {
         constructor(...items) {
             Array.prototype.push.apply(this, items);
@@ -18,6 +10,9 @@ var NodeList = (function () {
     }
 
     NodeList.prototype.forEach = Array.prototype.forEach;
+
+    // Curiously, a node list is visually output to the console as an array as long 
+    // as there is a `splice` method. 
     NodeList.prototype.splice = function(){};
 
     return NodeList;

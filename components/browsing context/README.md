@@ -9,7 +9,7 @@ document.addEventListener(type, listener, useCapture);
 
 // Nothing interesting ever happens!
 ```
-In the previous code snippet `addEventListener()` expects `type`, `listener` and `useCapture` to be a string, a function and a boolean respectively. Even though what is passed into `addEventListener()` results in a useless function call the internet browser
+In the previous code snippet `addEventListener()` expects `type`, `listener` and `useCapture` to be a string, a function and a boolean respectively. Even though what is passed into `addEventListener()` results in a useless function call, the internet browser
 will not throw an exception. This is a potentially hard-to-find bug. 
 
 In order to avoid such a scenario and many others, I have laid the foundations for an approximation of a browsing context. In other words, a browsing context encompasses the window object along with each one of its properties. Needless to say that by no means it will be possible to replicate a browsing context as it is extremely complex. This is only an approximation.
