@@ -34,12 +34,12 @@ new event type called 'persistentpress'. */
         // ES6 syntax (object destructuring)
         // var { keyCode, repeat, type } = event;
 
-        var keyCode = event.keyCode,
+        var key = event.key,
             repeat = event.repeat,
             type = event.type;
 
         // Aborts if the key pressed is not ENTER (`keydown` event only).
-        if (type === 'keydown' && (keyCode !== 13 || repeat)) { 
+        if (type === 'keydown' && (key !== 'Enter' || repeat)) { 
             return; 
         }
     
@@ -65,8 +65,7 @@ new event type called 'persistentpress'. */
 })();
 
 // NOTES: Even though 'KeyboardEvent.repeat' is defined on IE11, it always reports false;
-// NOTES: When more than two keys are attached to the persistent press behaviour then bugs are present
-// NOTE: Try TimeStamp instead of setTimeout
+// NOTES: When more than two keys can generate a persistent press, then bugs are present, it is recommended to stick to just one key
 // How about timer.fired??? new Number(1), is it okay to treat a primitive value a number;
 // Please test on <button> and <a>
 // NOTES ADD BROWSER CONTEXT FUNCTIONALITY
