@@ -1,13 +1,8 @@
+/**
+ * Represents the entire HTML or XML document. Conceptually, it is the root of the 
+ * document tree, and provides the primary access to the document's data.
+ */
 class Document extends Node {
-    /**
-     * Represents the entire HTML or XML document. Conceptually, it is the root of the 
-     * document tree, and provides the primary access to the document's data.
-     */
-    constructor() {
-        super();
-        this.body = new Element();
-    }
-
     /**
      * Creates an event of the type specified.
      * @param {String} type
