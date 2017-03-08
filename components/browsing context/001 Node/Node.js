@@ -112,3 +112,5 @@ var Node = (function () {
 })();
 
 global.Node = Node;
+
+// Note: childNodes should not be an instance of Array
