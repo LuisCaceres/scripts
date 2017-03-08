@@ -4,7 +4,6 @@ class Event {
      */
     constructor() {
         this.target = new Element();
-        this.keyCode = random(8, 222);
     }
 
     /**
