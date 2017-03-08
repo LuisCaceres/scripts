@@ -6,7 +6,6 @@ var NodeList = (function () {
             Array.prototype.push.apply(this, items);
             Object.freeze(this);
         }
-
     }
 
     NodeList.prototype.forEach = Array.prototype.forEach;
