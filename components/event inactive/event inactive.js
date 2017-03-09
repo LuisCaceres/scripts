@@ -3,9 +3,9 @@ if (typeof window === 'undefined') require('./../Browsing Context/browsing conte
 /* Sometimes an application needs to be aware of any periods of inactivity. This 
 occurs when the user stops interacting with the application. For the purposes of 
 this implementation, an application becomes inactive when it has not received any 
-input from the user through an input device (keyboard, mouse, etc.). The following 
-implementation triggers an 'inactive' event to which an application can subscribe 
-in order to react to any periods of inactivity. */
+user input from a device such as a keyboard or a pointer. The following implementation 
+triggers an 'inactive' event to which an application can subscribe in order to 
+react to any periods of inactivity. */
 
 (function () {
     'use strict';
