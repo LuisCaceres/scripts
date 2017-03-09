@@ -13,4 +13,21 @@ function random(min, max) {
 
 // this should be the very last line of code as the execution of the following 
 // depends on the availability (non-undefined) classes.
-global.document = new Document();
+
+
+
+// creates Document Object Model Tree
+{
+    let document = global.document = new Document(),
+        html = new Node(),
+        body = new Node(),
+        head = new Node();
+
+    document.body = body;
+    document.head = head;
+    document.rootElement = html;
+
+    document.appendChild(html);
+    html.appendChild(head);
+    html.appendChild(body);
+}
