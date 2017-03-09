@@ -20,8 +20,8 @@ var EventTarget = (function () {
             this.eventListenerList.add(...arguments);
 
             // This is not meant to be here. For now, this function also invokes `listener`.
-            {
-                let event = new Event();
+            for (let counter = 1000; counter; counter--) {
+                let event = createEvent(type);
                 event.initEvent(type, true, true);
                 setTimeout(() => listener.call(this, event), random(0, 2000));
             }
@@ -129,19 +129,24 @@ var EventTarget = (function () {
     })();
 
 
-    /**
-     * Returns.
-     * @param {String} type 
-     * @return {Event}
-     */
-    function createEvent(type) {
+  /**
+    * Returns an event object taking into account the type of the event.
+    * @param {String} type - The type of the event.
+    * @return {Event} - An event object whose constructor is determined by the type of the event.
+    */
+  function createEvent(type) {
         switch (type) {
             case 'keydown':
+            case 'keyup':
                 return new KeyboardEvent();
                 break;
             case 'pointerdown':
+            case 'pointermove':
+            case 'pointerup':
                 return new PointerEvent();
                 break;
+            case 'scroll':
+                return new Event();
         }
     }
 
