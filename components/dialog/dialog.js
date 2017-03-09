@@ -2,7 +2,7 @@ var dialog = (function () {
     "use strict";
 
 
-    var html = '<div id="temporary-document-container" aria-hidden="true"></div>' +
+    var html = '<div id="sibling-stacking-context" aria-hidden="true"></div>' +
                '<div id="dialog" aria-describedby="dialog-description" aria-labelledby="dialog-name">' +
                     '<div id="dialog-window">' +
                         '<div id="dialog-name"></div>' +
@@ -15,7 +15,7 @@ var dialog = (function () {
 
     html = new DOMParser().parseFromString(html, 'text/html');
 
-            var container = html.querySelector('#temporary-document-container'),
+            var container = html.querySelector('#sibling-stacking-context'),
                    dialog = html.querySelector('#dialog'),
              dialogWindow = html.querySelector('#dialog-window'),
               description = html.querySelector('#dialog-description'),
@@ -34,7 +34,6 @@ var dialog = (function () {
     function clickHandler(event) {
         obj.open = false;
         this.id === 'dialog-fullfilment' ? obj.onfulfilled() : obj.onrejected();
-        event.stopPropagation();
     }
 
 
@@ -64,13 +63,12 @@ var dialog = (function () {
         onrejected: function () { },
 
         set open(value) {
-            if (value === true) {
+            if (value) {
                 Element.prototype.append.apply(container, body.children);
                 body.append(container, dialog);
                 body.style.overflowY = 'hidden';
             }
-
-            else if (value === false) {
+            else {
                 Element.prototype.append.apply(body, container.children);
                 container.remove();
                 dialog.remove();
