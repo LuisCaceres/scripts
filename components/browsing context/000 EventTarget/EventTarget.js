@@ -145,6 +145,7 @@ var EventTarget = (function () {
             case 'pointerup':
                 return new PointerEvent();
                 break;
+            case 'input':
             case 'scroll':
                 return new Event();
         }
