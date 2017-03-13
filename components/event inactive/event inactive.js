@@ -41,6 +41,7 @@ react to any periods of inactivity. */
     document.addEventListener('pointermove', inactivityDetector, true);
     document.addEventListener('pointerup', inactivityDetector, true);
     document.addEventListener('scroll', inactivityDetector, true);
+    document.addEventListener('wheel', inactivityDetector, true);
 
     inactivityDetector();
 })();
