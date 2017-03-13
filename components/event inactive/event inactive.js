@@ -2,15 +2,16 @@ if (typeof window === 'undefined') require('./../Browsing Context/browsing conte
 
 /* Sometimes an application needs to be aware of any periods of inactivity. This 
 occurs when the user stops interacting with the application. For the purposes of 
-this implementation, an application becomes inactive when it has not received any 
-user input from a device such as a keyboard or a pointer. The following implementation 
-triggers an 'inactive' event to which an application can subscribe in order to 
+this implementation, an application becomes inactive when no user interface events
+are triggered for a determinate amount of time. The application becomes active again
+once such an event is triggered. The following implementation triggers both an 
+'inactive' and 'active' events to which an application can subscribe in order to 
 react to any periods of inactivity. */
 
 (function () {
     'use strict';
 
-    const DELAY = 5000;
+    const APPLICATION_BECOMES_INACTIVE_AT = 5000;
 
     var inactiveEvent = document.createEvent('Event');
     inactiveEvent.initEvent('inactive', true, false);
@@ -29,10 +30,10 @@ react to any periods of inactivity. */
         timer = setTimeout(function () {
             timer = null;
             document.dispatchEvent(inactiveEvent);
-        }, DELAY);
+        }, APPLICATION_BECOMES_INACTIVE_AT);
     }
 
-    // replaces keyboard events as mobile devices do not support them for obvious reasons
+    // replaces keyboard events on mobile devices due to lack of support for obvious reasons
     document.addEventListener('input', inactivityDetector, true);
     document.addEventListener('keydown', inactivityDetector, true);
     document.addEventListener('keyup', inactivityDetector, true);
