@@ -130,7 +130,7 @@ var EventTarget = (function () {
 
 
   /**
-    * Returns an event object taking into account the type of the event.
+    * Returns an event object of the type defined by the `type` parameter.
     * @param {String} type - The type of the event.
     * @return {Event} - An event object whose constructor is determined by the type of the event.
     */
@@ -148,6 +148,9 @@ var EventTarget = (function () {
             case 'input':
             case 'scroll':
                 return new Event();
+                break;
+            case 'wheel':
+                return new WheelEvent();
         }
     }
 
