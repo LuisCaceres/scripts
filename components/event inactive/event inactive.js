@@ -32,6 +32,8 @@ react to any periods of inactivity. */
         }, DELAY);
     }
 
+    // replaces keyboard events as mobile devices do not support them for obvious reasons
+    document.addEventListener('input', inactivityDetector, true);
     document.addEventListener('keydown', inactivityDetector, true);
     document.addEventListener('keyup', inactivityDetector, true);
     document.addEventListener('pointerdown', inactivityDetector, true);
