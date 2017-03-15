@@ -22,6 +22,11 @@ of inactivity/activity. */
     var documentIsInactive = false;
     
     var timer;
+    
+    // var stopWatch = new StopWatch();
+    // stopwatch.stopsAt = 5000;
+    // stopwatch.onstop = function() {};
+    // stopwatch.isRunning = true || false;
 
     function inactivityDetector() {
         if (documentIsInactive) {
@@ -30,9 +35,12 @@ of inactivity/activity. */
             document.dispatchEvent(activeEvent);
         }
    
+        // stopwatch.stop();
         clearTimeout(timer);
         
         // Sets a timer which fires if no user interface events have occured.
+        // stopwatch.reset();
+        // stopwatch.start();
         timer = setTimeout(function () {
             // Document becomes inactive due to lack of user activity.
             documentIsInactive = true;
