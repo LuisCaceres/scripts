@@ -136,6 +136,9 @@ var EventTarget = (function () {
     */
   function createEvent(type) {
         switch (type) {
+            case 'blur':
+            case 'focus': 
+                return new FocusEvent();
             case 'keydown':
             case 'keyup':
                 return new KeyboardEvent();
@@ -148,6 +151,7 @@ var EventTarget = (function () {
             case 'input':
             case 'scroll':
                 return new Event();
+                break;
         }
     }
 
