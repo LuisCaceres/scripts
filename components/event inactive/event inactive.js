@@ -3,15 +3,15 @@ if (typeof window === 'undefined') require('./../Browsing Context/browsing conte
 /* Sometimes an application needs to be aware of any periods of inactivity. This 
 occurs when the user stops interacting with the application. For the purposes of 
 this implementation, an application becomes inactive when no user interface events
-are triggered for a determinate amount of time. The application becomes active again
-once such an event is triggered. The following implementation triggers both an 
-'inactive' and 'active' events to which an application can subscribe in order to 
-react to any periods of inactivity. */
+occur for a determinate amount of time. The application becomes active once a user 
+interface event occurs again. The following implementation triggers both 'inactive' 
+and 'active' events to which an application can subscribe to react to any periods
+of inactivity/activity. */
 
 (function () {
     'use strict';
 
-    const APPLICATION_BECOMES_INACTIVE_AT = 5000;
+    const APP_BECOMES_INACTIVE_AT = 5000;    // 5 seconds
 
     var inactiveEvent = document.createEvent('Event');
     inactiveEvent.initEvent('inactive', true, false);
@@ -19,21 +19,36 @@ react to any periods of inactivity. */
     var activeEvent = document.createEvent('Event');
     activeEvent.initEvent('active', true, false);
 
+    var documentIsInactive = false;
+    
     var timer;
+    
+    // var stopWatch = new StopWatch();
+    // stopwatch.stopsAt = 5000;
+    // stopwatch.onstop = function() {};
+    // stopwatch.isRunning = true || false;
 
     function inactivityDetector() {
-        if (timer === null) {
+        if (documentIsInactive) {
+            // A user interface event has occured. The document becomes active.
+            documentIsInactive = false;
             document.dispatchEvent(activeEvent);
         }
    
+        // stopwatch.stop();
         clearTimeout(timer);
+        
+        // Sets a timer which fires if no user interface events have occured.
+        // stopwatch.reset();
+        // stopwatch.start();
         timer = setTimeout(function () {
-            timer = null;
+            // Document becomes inactive due to lack of user activity.
+            documentIsInactive = true;
             document.dispatchEvent(inactiveEvent);
-        }, APPLICATION_BECOMES_INACTIVE_AT);
+        }, APP_BECOMES_INACTIVE_AT);
     }
 
-    // replaces keyboard events on mobile devices due to lack of support for obvious reasons
+    // Replaces keyboard events on mobile devices due to lack of support for obvious reasons
     document.addEventListener('input', inactivityDetector, true);
     document.addEventListener('keydown', inactivityDetector, true);
     document.addEventListener('keyup', inactivityDetector, true);
@@ -41,6 +56,7 @@ react to any periods of inactivity. */
     document.addEventListener('pointermove', inactivityDetector, true);
     document.addEventListener('pointerup', inactivityDetector, true);
     document.addEventListener('scroll', inactivityDetector, true);
+    document.addEventListener('wheel', inactivityDetector, true);
 
     inactivityDetector();
 })();
