@@ -1,17 +1,17 @@
 if (typeof window === 'undefined') require('./../Browsing Context/browsing context.js');
 
-/* Sometimes an application needs to be aware of any periods of inactivity. This 
-occurs when the user stops interacting with the application. For the purposes of 
+/* Sometimes an application needs to be aware of any periods of inactivity. This
+occurs when the user stops interacting with the application. For the purposes of
 this implementation, an application becomes inactive when no user interface events
-occur for a determinate amount of time. The application becomes active once a user 
-interface event occurs again. The following implementation triggers both 'inactive' 
+occur for a determinate amount of time. The application becomes active once a user
+interface event occurs again. The following implementation triggers both 'inactive'
 and 'active' events to which an application can subscribe to react to any periods
 of inactivity/activity. */
 
 (function () {
     'use strict';
 
-    const APP_BECOMES_INACTIVE_AT = 5000;    // 5 seconds
+    const APPLICATION_BECOMES_INACTIVE_AT = 5000;
 
     var inactiveEvent = document.createEvent('Event');
     inactiveEvent.initEvent('inactive', true, false);
@@ -19,36 +19,25 @@ of inactivity/activity. */
     var activeEvent = document.createEvent('Event');
     activeEvent.initEvent('active', true, false);
 
-    var documentIsInactive = false;
-    
     var timer;
-    
-    // var stopWatch = new StopWatch();
-    // stopwatch.stopsAt = 5000;
-    // stopwatch.onstop = function() {};
-    // stopwatch.isRunning = true || false;
 
     function inactivityDetector() {
-        if (documentIsInactive) {
-            // A user interface event has occured. The document becomes active.
-            documentIsInactive = false;
+        if (timer === null) {
+            // At this point the application becomes active.
             document.dispatchEvent(activeEvent);
         }
    
-        // stopwatch.stop();
         clearTimeout(timer);
-        
-        // Sets a timer which fires if no user interface events have occured.
-        // stopwatch.reset();
-        // stopwatch.start();
+
+        // Gets the timer to start ticking.
         timer = setTimeout(function () {
-            // Document becomes inactive due to lack of user activity.
-            documentIsInactive = true;
+            // At this point the application becomes inactive.
+            timer = null;
             document.dispatchEvent(inactiveEvent);
-        }, APP_BECOMES_INACTIVE_AT);
+        }, APPLICATION_BECOMES_INACTIVE_AT);
     }
 
-    // Replaces keyboard events on mobile devices due to lack of support for obvious reasons
+    // Replaces keyboard events on mobile devices as there is no real keyboard.
     document.addEventListener('input', inactivityDetector, true);
     document.addEventListener('keydown', inactivityDetector, true);
     document.addEventListener('keyup', inactivityDetector, true);
