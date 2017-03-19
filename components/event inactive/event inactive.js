@@ -4,7 +4,11 @@ if (typeof window === 'undefined') {
 
 /* Sometimes an application needs to be aware of any periods of inactivity. This
 occurs when the user stops interacting with the application. For the purposes of
-this implementation, an application becomes inactive when no user interface events occur for a determinate amount of time. The application becomes active once a user interface event occurs again. The following implementation triggers both 'inactive' and 'active' events to which an application can subscribe to react to any periods of inactivity/activity. */
+this implementation, an application becomes inactive when no user interface
+events occur for a determinate amount of time. The application becomes active
+once a user interface event occurs again. The following implementation triggers
+both 'inactive' and 'active' events to which an application can subscribe to
+react to any periods of inactivity/activity. */
 
 (function () {
     'use strict';
