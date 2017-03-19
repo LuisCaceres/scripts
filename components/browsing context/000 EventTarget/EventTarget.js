@@ -36,7 +36,7 @@ var EventTarget = (function () {
          */
         dispatchEvent(event) {
             if (!(event instanceof Event)) throw Error('"event" is not an instance of Event.');
-            return Boolean(random(0, 1));
+            return !!random(0, 1);
         }
 
         /**

@@ -77,7 +77,7 @@ var EventTarget = (function () {
          */
         dispatchEvent(event) {
             if (!(event instanceof Event)) throw Error('"event" is not an instance of Event.');
-            return Boolean(random(0, 1));
+            return !!random(0, 1);
         }
 
         /**
@@ -171,12 +171,15 @@ var EventTarget = (function () {
 
 
   /**
-    * Returns an event object taking into account the type of the event.
+    * Returns an event object of the type defined by the `type` parameter.
     * @param {String} type - The type of the event.
     * @return {Event} - An event object whose constructor is determined by the type of the event.
     */
   function createEvent(type) {
         switch (type) {
+            case 'blur':
+            case 'focus': 
+                return new FocusEvent();
             case 'keydown':
             case 'keyup':
                 return new KeyboardEvent();
@@ -186,8 +189,12 @@ var EventTarget = (function () {
             case 'pointerup':
                 return new PointerEvent();
                 break;
+            case 'input':
             case 'scroll':
                 return new Event();
+                break;
+            case 'wheel':
+                return new WheelEvent();
         }
     }
 
@@ -199,6 +206,7 @@ global.EventTarget = EventTarget;
 
 
 
+
 var KeyboardEvent = (function () {
     'use strict';
 
@@ -206,12 +214,12 @@ var KeyboardEvent = (function () {
         constructor(type) {
             super();
             this.key = keys[random(0, keys.length - 1)];
-            this.repeat = Boolean(random(0, 1));
+            this.repeat = !!random(0, 1);
         }
     }
 
     var keys = [
-        'Enter',
+        'Enter', 'ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown',
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
@@ -470,7 +478,7 @@ class Element extends Node {
      */
     matches(selectors) {
         if (typeof selectors !== 'string') throw Error("'selector' is not of type string.");
-        return Boolean(random(0, 1));
+        return !!random(0, 1);
     }
 }
 
@@ -495,6 +503,18 @@ var PointerEvent = (function () {
 })();
 
 global.PointerEvent = PointerEvent;
+
+
+
+var WheelEvent = (function () {
+    'use strict';
+
+    class WheelEvent extends MouseEvent {}
+    return WheelEvent;
+})();
+
+global.WheelEvent = WheelEvent;
+
 
 
 

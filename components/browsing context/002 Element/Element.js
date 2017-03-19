@@ -33,7 +33,7 @@ class Element extends Node {
      */
     matches(selectors) {
         if (typeof selectors !== 'string') throw Error("'selector' is not of type string.");
-        return Boolean(random(0, 1));
+        return !!random(0, 1);
     }
 }
 

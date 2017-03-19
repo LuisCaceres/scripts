@@ -5,7 +5,7 @@ var KeyboardEvent = (function () {
         constructor(type) {
             super();
             this.key = keys[random(0, keys.length - 1)];
-            this.repeat = Boolean(random(0, 1));
+            this.repeat = !!random(0, 1);
         }
     }
 
