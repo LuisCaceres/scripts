@@ -30,7 +30,6 @@ directional navigation for a composite widget. */
         var target = event.target;
 
         var keyPressed = event.key,
-            // key codes map to the END, HOME and arrow keys
             keysAllowed = 'ArrowLeft, ArrowUp, ArrowDown, ArrowRight, End, Home';
 
         if (keysAllowed.includes(keyPressed)) {
@@ -57,7 +56,7 @@ directional navigation for a composite widget. */
             else {
                 // an arrow key was pressed
                 // user wishes to navigate forward or backwards to another focusable
-                siblings.find(target);
+                siblings.positionAt(target);
                 siblings.autoreset = true;
                 method = keyPressed === 'ArrowLeft' || keyPressed === 'ArrowUp' ? 'previous' : 'next';         
                 // sets a starting point for traversal
