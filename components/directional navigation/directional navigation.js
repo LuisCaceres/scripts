@@ -10,47 +10,44 @@ directional navigation for a composite widget. */
     document.addEventListener('focus', function directionalNavigationDetector(event) {
         var activeElement = document.activeElement;
 
-        if (activeElement.hasAttribute('tabindex')) {
+        if (activeElement.getAttribute('role') === 'gridcell') {
             // assumes the element with focus belongs to a composite widget. This element
             // may have siblings to navigate to. The application will respond to
-            // key presses while the element remains with focus.
+            // certain key presses while the element remains with focus.
             activeElement.addEventListener('blur', blurHandler);
             activeElement.addEventListener('keydown', keydownHandler);
         }
     }, true);
 
 
-    var blurHandler = function blurHandler(event) {
+    var blurHandler = function blurHandler() {
         this.removeEventListener('blur', blurHandler);
         this.removeEventListener('keydown', keydownHandler);
-        event.stopPropagation();
     }
 
 
     var keydownHandler = function keydownHandler(event) {
         var target = event.target;
 
-        var keyPressed = event.keyCode,
+        var keyPressed = event.key,
             // key codes map to the END, HOME and arrow keys
-            keys = [35, 36, 37, 38, 39, 40];
+            keysAllowed = 'ArrowLeft, ArrowUp, ArrowDown, ArrowRight, End, Home';
 
-        if (keys.includes(keyPressed)) {
+        if (keysAllowed.includes(keyPressed)) {
             // the siblings (if any) of the element with focus will be traversed to 
             // find another focusable. 
             let siblings = new Iterator(target.parentElement.children),
                 sibling,
                 method;  
 
-            if (keyPressed === 35) {
-                // END key was pressed
+            if (keyPressed === 'End') {
                 // user wishes to navigate to the very last focusable
                 // sets a starting point for traversal
                 sibling = siblings.last();
                 method = 'previous';
             }
 
-            else if (keyPressed == 36) {
-                // HOME key was pressed
+            else if (keyPressed == 'Home') {
                 // user wishes to navigate to the very first focusable
                 // sets a starting point for traversal
                 sibling = siblings.first();
@@ -62,14 +59,14 @@ directional navigation for a composite widget. */
                 // user wishes to navigate forward or backwards to another focusable
                 siblings.find(target);
                 siblings.autoreset = true;
-                method = keyPressed === 37 || keyPressed === 38 ? 'previous' : 'next';         
+                method = keyPressed === 'ArrowLeft' || keyPressed === 'ArrowUp' ? 'previous' : 'next';         
                 // sets a starting point for traversal
                 sibling = siblings[method]();
             }
          
             // if 'sibling' is not focusable already, it iterates over the other siblings 
             // until a focusable is found
-            while (sibling.hasAttribute('tabindex') === false) {
+            while (sibling.getAttribute('role') !== 'gridcell') {
                 sibling = siblings[method]();
             }
 
@@ -83,7 +80,6 @@ directional navigation for a composite widget. */
             }, 0);
 
             event.preventDefault();
-            event.stopPropagation();
         }
     };
 })();
