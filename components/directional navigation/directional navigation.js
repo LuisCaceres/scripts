@@ -6,12 +6,12 @@ directional navigation for a composite widget. */
 (function () {
     'use strict';
 
-    // attempts to detect a composite widget requiring directional navigation 
-    document.addEventListener('focus', function directionalNavigationDetector(event) {
+    // Attempts to detect a composite widget requiring directional navigation.
+    document.addEventListener('focus', function directionalNavigationDetector() {
         var activeElement = document.activeElement;
 
         if (activeElement.getAttribute('role') === 'gridcell') {
-            // assumes the element with focus belongs to a composite widget. This element
+            // Assumes the element with focus belongs to a composite widget. This element
             // may have siblings to navigate to. The application will respond to
             // certain key presses while the element remains with focus.
             activeElement.addEventListener('blur', blurHandler);
@@ -33,45 +33,45 @@ directional navigation for a composite widget. */
             keysAllowed = 'ArrowLeft, ArrowUp, ArrowDown, ArrowRight, End, Home';
 
         if (keysAllowed.includes(keyPressed)) {
-            // the siblings (if any) of the element with focus will be traversed to 
-            // find another focusable. 
+            // The siblings (if any) of the element with focus
+            // will be visited to find another focusable. 
             let siblings = new Iterator(target.parentElement.children),
                 sibling,
                 method;  
 
             if (keyPressed === 'End') {
-                // user wishes to navigate to the very last focusable
-                // sets a starting point for traversal
+                // User wants to navigate to the very last focusable.
+                // Sets a starting point for iteration.
                 sibling = siblings.last();
                 method = 'previous';
             }
 
             else if (keyPressed == 'Home') {
-                // user wishes to navigate to the very first focusable
-                // sets a starting point for traversal
+                // User wants to navigate to the very first focusable.
+                // Sets a starting point for iteration.
                 sibling = siblings.first();
                 method = 'next';
             }
 
             else {
-                // an arrow key was pressed
-                // user wishes to navigate forward or backwards to another focusable
+                // An arrow key was pressed.
+                // User wants to navigate forward or backwards to another focusable.
                 siblings.positionAt(target);
                 siblings.autoreset = true;
                 method = keyPressed === 'ArrowLeft' || keyPressed === 'ArrowUp' ? 'previous' : 'next';         
-                // sets a starting point for traversal
+                // Sets a starting point for iteration.
                 sibling = siblings[method]();
             }
          
-            // if 'sibling' is not focusable already, it iterates over the other siblings 
-            // until a focusable is found
+            // If 'sibling' is not focusable, iteration moves to another sibling until
+            // a focusable sibling is found.
             while (sibling.getAttribute('role') !== 'gridcell') {
                 sibling = siblings[method]();
             }
 
-            // at this point a focusable sibling has been found. It will gain focus soon.
+            // At this point a focusable sibling has been found. It will gain focus soon.
             setTimeout(function () {
-                // swaps the values of the 'tabindex' attribute. A composite widget can 
+                // Swaps the values of the 'tabindex' attribute. A composite widget can 
                 // contain only one element with a 'tabindex' value of 0.
                 target.tabIndex = -1;
                 sibling.tabIndex = 0;
