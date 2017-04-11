@@ -20,48 +20,29 @@ var Iterator = (function () {
     var prototype = Iterator.prototype;
 
 
-    // Indicates if the iterator should be moved to the first or last position once 
-    // the iterator has reached the beginning or the end of the list.
+    // Indicates if the iterator must be moved to the first or last position 
+    // once it has reached the end or the beginning of the list.
     prototype.autoreset = false;
 
-
     /**
-      * @returns The value located in the current position of the iterator.
+      * @return {*} The value located in the current position of the iterator.
       */
     prototype.current = function current() {
         return this.iterable[this.index];
     };
 
-
-    /**
-      * Moves the iterator to the position occupied by 'value' as long as 'value' is present in the list. 
-      * @param value The value to search for in the list.
-      * @returns true if 'value' was found otherwise false.
-      */
-    prototype.positionAt = function positionAt(value) {
-        var index = Array.prototype.indexOf.call(this.iterable, value);
-
-        if (index > -1) {
-            this.index = index;
-            return true;
-        }
-        return false;
-    };
-
-
     /**
       * Moves the iterator to the first position in the list. 
-      * @returns The value located in the first position in the list.
+      * @return {*} The value located in that position.
       */
     prototype.first = function first() {
         this.index = 0;
         return this.iterable[this.index];
     };
 
-
     /**
       * Moves the iterator to the last position in the list. 
-      * @returns The value located in the last position in the list.
+      * @return {*} The value located in that position.
       */
     prototype.last = function last() {
         var iterable = this.iterable;
@@ -69,12 +50,11 @@ var Iterator = (function () {
         return iterable[this.index];
     };
 
-
      /**
       * Moves the iterator one position forward in the list. 
-      * @returns The value located in that new position of the iterator.
+      * @return {*} The value located in that position.
       */
-    prototype.next = function (value) {
+    prototype.next = function next() {
         var index = ++this.index,
             iterable = this.iterable,
             order = this.order,
@@ -91,12 +71,22 @@ var Iterator = (function () {
         return iterable[index];
     };
 
-
+    /**
+      * Moves the iterator to the position occupied by 'value' (if present in the list). 
+      * @param {*} value The value to search for in the list.
+      * @return {Boolean} true if the iterator was moved otherwise false.
+      */
+    prototype.positionAt = function positionAt(value) {
+        var index = Array.prototype.indexOf.call(this.iterable, value);
+        this.index = index > - 1 ? index : this.index;
+        return !!(index > - 1);
+    };
+    
     /**
       * Moves the iterator one position backwards in the list. 
-      * @returns The value located in that new position of the iterator.
+      * @return {*} The value located in that position.
       */
-    prototype.previous = function () {
+    prototype.previous = function previous() {
         var index = this.index <= this.iterable.length ? --this.index : this.iterable.length - 1,
             iterable = this.iterable,
             order = this.order,
