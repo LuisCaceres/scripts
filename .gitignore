@@ -1,3 +1,14 @@
+# jade files are ignored to give preference to html files.
 *.jade
+
+# VS Code stuff such as debuggin settings
 /.vscode
+
+# JavaScript Code coverage by Istanbul
+/components/*/coverage
+
+# ESLint stuff (JavaScript linter)
+.eslintrc.json
+
+# Node stuff
 /node_modules
