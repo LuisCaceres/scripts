@@ -7,19 +7,22 @@ the screen reader will say 'em. However, no letter 'm' is inserted. This is frus
 Tested on JAWS 17 on Internet Explorer 11 
 */
 
-(function(){
+(function () {
 	'use strict';
-  
-  window.addEventListener('keypress', function (event) {
-  	var target = event.target,
-    	  relevance = 'INPUT, TEXTAREA';
-    
-    if (relevance.includes(target.nodeName) && target.maxLength > -1) {
-        if (target.value.length === target.maxLength) {
-        	console.log('The character "' + event.key + '" could not be inserted.');
-        }
-    }
-  }, true);
+
+	function onKeyPress(event) {
+		var target = event.target,
+			relevance = 'INPUT, TEXTAREA';
+
+		if (relevance.includes(target.nodeName) &&
+			target.maxLength > -1 &&
+			target.maxLength === target.value.length) {
+			console.log('The character "' + event.key +
+				'" could not be  inserted.');
+		}
+	}
+
+	window.addEventListener('keypress', onKeyPress, true);
 }());
 
 
