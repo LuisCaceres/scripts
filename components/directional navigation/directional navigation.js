@@ -78,6 +78,7 @@ directional navigation for a composite widget. */
                 sibling.focus();
             }, 0);
 
+            // prevents scrolling when pressing arrow keys
             event.preventDefault();
         }
     };
