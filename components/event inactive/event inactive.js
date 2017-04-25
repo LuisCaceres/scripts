@@ -8,7 +8,7 @@ this implementation, an application becomes inactive when no user interface
 events occur for a determinate amount of time. The application becomes active
 once a user interface event occurs again. The following implementation triggers
 both 'inactive' and 'active' events to which an application can subscribe to
-react to any periods of inactivity/activity. */
+react to any periods of inactivity/activity. */ 
 
 (function () {
     'use strict';
@@ -50,4 +50,4 @@ react to any periods of inactivity/activity. */
     document.addEventListener('wheel', inactivityDetector, true);
 
     inactivityDetector();
-})();
+}());

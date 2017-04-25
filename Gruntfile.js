@@ -2,6 +2,7 @@ module.exports = function (grunt) {
 
     // Project configuration.
     grunt.initConfig({
+        
 
         // Concatenates JavaScript files related to the browsing context feature.
         concat: {
@@ -14,6 +15,7 @@ module.exports = function (grunt) {
             },
         },
 
+
         // Converts less files into CSS files.
         less: {
             development: {
@@ -24,6 +26,7 @@ module.exports = function (grunt) {
                 }]
             }
         },
+
 
         // Converts pug files into HTML files.
         pug: {
@@ -44,26 +47,26 @@ module.exports = function (grunt) {
             },
 
             concat: {
-                files: ['components/Browsing Context/*.js', '!components/Browsing Context/browsing context.js'],
+                files: ['components/Browsing Context/*/!(test).js'],
                 tasks: ['concat']
             },
 
             less: {
-                files: ['components/**/*.less'],
+                files: 'components/**/*.less',
                 tasks: ['less']
             },
 
             pug: {
-                files: ['components/**/*.pug'],
+                files: 'components/**/*.pug',
                 tasks: ['pug']
             }
         }
     });
 
-    // Introduces global varibles
-    // grunt.registerTask('functions', function () {
-    //     require('./node_modules/functions/Iterator.js');
-    // });
+
+    grunt.registerTask('functions', function () {
+         require('./components/Browsing Context/browsing context.js');
+    });
 
     // loads plugins
     grunt.loadNpmTasks('grunt-contrib-concat');
