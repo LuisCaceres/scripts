@@ -1,4 +1,7 @@
-/* A composite widget (such as a grid) may contain activable descendants. To move through the activable descendants the user may press the HOME, END, or arrow keys. This is referred to as directional navigation. The following piece of code enables directional navigation for a composite widget. */
+/* A composite widget (such as a grid) may contain activable descendants. To
+move through the activable descendants the user may press the HOME, END, or
+arrow keys. This is referred to as directional navigation. The following piece
+of code enables directional navigation for a composite widget. */
 
 (function () {
     'use strict';
@@ -42,8 +45,8 @@
     }
 
 
-    /* Taking into account the key pressed, returns a constant signaling the
-     * location of the active descendant amongst its siblings.
+    /* Taking into account the key pressed, returns a constant indicating the
+     * position of the active descendant the user wishes to select.
      * @param {String} key - The key pressed by the user.
      * @return {Number} A constant with the following values:
      */
