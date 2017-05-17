@@ -18,7 +18,7 @@
     
     
     /* Removes any event listeners.
-     * @this {Element} - The composite widget.
+     * @this {Element} - The active descendant.
      * @listens FocusEvent#type === 'blur'
      */
     function blurHandler() {
@@ -28,7 +28,7 @@
 
 
     /* Attempts to detect the existence of a composite widget.
-     * @this {Element} - The composite widget.
+     * @this {Element} - Any element that may receive focus.
      * @listens FocusEvent#type === 'focus'
      */
     function compositeWidgetDetector() {
