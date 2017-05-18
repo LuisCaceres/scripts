@@ -8,46 +8,60 @@ this implementation, an application becomes inactive when no user interface
 events occur for a determinate amount of time. The application becomes active
 once a user interface event occurs again. The following implementation triggers
 both 'inactive' and 'active' events to which an application can subscribe to
-react to any periods of inactivity/activity. */ 
+react to any periods of inactivity/activity. */
 
 (function () {
     'use strict';
 
-    const APPLICATION_BECOMES_INACTIVE_AT = 5000;
+    const APPLICATION_BECOMES_INACTIVE_AT = 5000; // milliseconds
 
-    var inactiveEvent = document.createEvent('Event');
+    const inactiveEvent = document.createEvent('Event');
     inactiveEvent.initEvent('inactive', true, false);
 
-    var activeEvent = document.createEvent('Event');
+    const activeEvent = document.createEvent('Event');
     activeEvent.initEvent('active', true, false);
 
-    var timer;
 
-    function inactivityDetector() {
-        if (timer === null) {
-            // At this point the application becomes active.
-            document.dispatchEvent(activeEvent);
-        }
-   
-        clearTimeout(timer);
+    /** @type {Number} */
+    var inactivityTimer = setTimeout(inactivityDetector,
+        APPLICATION_BECOMES_INACTIVE_AT);
 
-        // Gets the timer to start ticking.
-        timer = setTimeout(function () {
-            // At this point the application becomes inactive.
-            timer = null;
-            document.dispatchEvent(inactiveEvent);
-        }, APPLICATION_BECOMES_INACTIVE_AT);
+
+    /** Fires the active event.
+     * @this {Element} - The target of the user interface event.
+     * @listens Event.type === 'input'
+     *          Event.type === 'scroll'
+     *          KeyboardEvent.type === 'keydown'
+     *          KeyboardEvent.type === 'keyup'
+     *          PointerEvent.type === 'pointerdown'
+     *          PointerEvent.type === 'pointermove'
+     *          PointerEvent.type === 'pointerup'
+     *          WheelEvent.type === 'wheel' 
+     */
+    function activityDetector() {
+        document.dispatchEvent(activeEvent);
+        // Sets the inactivity timer back to zero and starts ticking again.
+        clearTimeout(inactivityTimer);
+        inactivityTimer = setTimeout(inactivityDetector,
+            APPLICATION_BECOMES_INACTIVE_AT);
     }
 
-    // Replaces keyboard events on mobile devices as there is no real keyboard.
-    document.addEventListener('input', inactivityDetector, true);
-    document.addEventListener('keydown', inactivityDetector, true);
-    document.addEventListener('keyup', inactivityDetector, true);
-    document.addEventListener('pointerdown', inactivityDetector, true);
-    document.addEventListener('pointermove', inactivityDetector, true);
-    document.addEventListener('pointerup', inactivityDetector, true);
-    document.addEventListener('scroll', inactivityDetector, true);
-    document.addEventListener('wheel', inactivityDetector, true);
 
-    inactivityDetector();
+    /** Fires the inactive event.
+     * @listens window#SetTimeout
+     */
+    function inactivityDetector() {
+        // The application becomes inactive!
+        document.dispatchEvent(inactiveEvent);
+    }
+
+    // The input event replaces keyboard events on mobile devices.
+    document.addEventListener('input', activityDetector, true);
+    document.addEventListener('keydown', activityDetector, true);
+    document.addEventListener('keyup', activityDetector, true);
+    document.addEventListener('pointerdown', activityDetector, true);
+    document.addEventListener('pointermove', activityDetector, true);
+    document.addEventListener('pointerup', activityDetector, true);
+    document.addEventListener('scroll', activityDetector, true);
+    document.addEventListener('wheel', activityDetector, true);
 }());
