@@ -5,30 +5,157 @@
     <title>Mocha Tests</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.css" rel="stylesheet">
-    <!-- loads a library assertion -->
-    <script src="https://cdn.rawgit.com/Automattic/expect.js/0.3.1/index.js"></script>
     <!-- loads test framework -->
     <script src="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.js"></script>
+    <!-- loads a library assertion -->
+    <script src="https://cdn.rawgit.com/Automattic/expect.js/0.3.1/index.js"></script>
     <!-- do not remove the following <script> -->
-    <script>mocha.setup('bdd');</script>
-    <style></style>
+    <script>
+        mocha.setup('bdd');
+    </script>
+    <!-- loads the event constructors polyfill -->
+    <script src="../polyfills/event constructors.js"></script>
+    <script src="../polyfills/polyfills.js"></script>
+    <script src="../class Iterator/class Iterator.js"></script>
+    <script src="directional navigation.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        [role=gridcell] {
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            background: orange;
+            margin: 10px;
+        }
+
+        [role=tab] {
+            padding: 1em;
+            border: solid 2px;
+        }
+
+        [role=tabpanel] {
+            display: none;
+        }
+        
+         :focus {
+            outline: red solid 5px;
+        }
+    </style>
 </head>
 
 <body>
+    <div role="grid">
+        <div role="row">
+            <div tabindex="0" role="gridcell">gridcell 0</div>
+        </div>
+    </div>
+
+    <div role="tablist">
+        <div tabindex="0" role="tab">tab 0</div>
+        <div role="tabpanel">tabpanel 0</div>
+    </div>
+
     <!-- do not remove the following <div> -->
     <div id="mocha"></div>
     <script>
         (function () {
             'use strict';
 
-            describe('A group of unit tests!', function () {
+            Iterator.prototype.random = function () {
+                var iterable = this.iterable;
+                return iterable[random(0, iterable.length - 1)];
+            };
 
-                it('Is a unit test!');
+            var row = document.querySelector('[role=row]'),
+                cell = row.querySelector('[role=gridcell]'),
+                cells;
+
+            function random(min, max) {
+                return min + Math.floor(Math.random() * (max - min + 1));
+            }
+
+            function foo() {
+                var numberOfCells = random(1, 100),
+                    counter = 1;
+
+                // appends a random number of cells to the grid
+                while (counter++ < numberOfCells) {
+                    let node = cell.cloneNode();
+                    node.tabIndex = -1;
+                    node.textContent = 'gridcell ' + counter;
+                    row.appendChild(node);
+                }
+
+                cells = new Iterator(row.children);
+
+                // picks a random cell from the grid and gives it focus
+                cells.random().focus();
+            }
+
+            describe('Directional Navigation', function () {
+                beforeEach(function (done) {
+                    foo();
+                    setTimeout(done, 0);
+                });
+
+                it('selects the first cell when the "home" key is pressed.', function () {
+                    var event = new KeyboardEvent('keydown', { key: 'Home' });
+                    document.activeElement.dispatchEvent(event);
+                    expect(document.activeElement).to.equal(cells.first());
+                });
+
+                it('selects the last cell when the "end" key is pressed.', function () {
+                    var event = new KeyboardEvent('keydown', { key: 'End' });
+                    document.activeElement.dispatchEvent(event);
+                    expect(document.activeElement).to.equal(cells.last());
+                });
+
+                it('selects the previous cell when the "left arrow" key is pressed.', function () {
+                    var event = new KeyboardEvent('keydown', { key: 'ArrowLeft' });
+                    cells.positionAt(document.activeElement);
+                    document.activeElement.dispatchEvent(event);
+                    expect(document.activeElement).to.equal(cells.previous() || cells.first());
+                });
+
+                it('selects the previous cell when the "up arrow" key is pressed.', function () {
+                    var event = new KeyboardEvent('keydown', { key: 'ArrowUp' });
+                    cells.positionAt(document.activeElement);
+                    document.activeElement.dispatchEvent(event);
+                    expect(document.activeElement).to.equal(cells.previous() || cells.first());
+                });
+
+                it('selects the next cell when the "right arrow" key is pressed.', function () {
+                    var event = new KeyboardEvent('keydown', { key: 'ArrowRight' });
+                    cells.positionAt(document.activeElement);
+                    document.activeElement.dispatchEvent(event);
+                    expect(document.activeElement).to.equal(cells.next() || cells.last());
+                });
+
+                it('selects the next cell when the "down arrow" key is pressed.', function () {
+                    var event = new KeyboardEvent('keydown', { key: 'ArrowDown' });
+                    cells.positionAt(document.activeElement);
+                    document.activeElement.dispatchEvent(event);
+                    expect(document.activeElement).to.equal(cells.next() || cells.last());
+                });
+
+                // removes each of the cells from the grid
+                afterEach(function () {
+                    row.innerHTML = '';
+                    cell.textContent = 'gridcell ' + 0;
+                    row.appendChild(cell);    
+                });
+
+                after(foo);
             });
         }());
     </script>
-    <!-- do not remove the following <script> -->    
-    <script>mocha.run();</script>
+    <!-- do not remove the following <script> -->
+    <script>
+        mocha.run();
+    </script>
 </body>
 
 </html>
