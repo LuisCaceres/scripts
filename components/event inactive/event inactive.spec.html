@@ -1,0 +1,71 @@
+<html lang="en">
+
+<head>
+    <title>Mocha Tests</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.css" rel="stylesheet">
+    <!-- loads test framework -->
+    <script src="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.js"></script>
+    <!-- loads a library assertion -->
+    <script src="https://cdn.rawgit.com/Automattic/expect.js/0.3.1/index.js"></script>
+    <!-- do not remove the following <script> -->
+    <script>
+        mocha.setup('bdd');
+    </script>
+    <!-- loads the event constructors polyfill -->
+    <script src="../polyfills/event constructors.js"></script>
+    <script src="event inactive.js"></script>
+    <style>
+
+    </style>
+</head>
+
+<body>
+
+    <!-- do not remove the following <div> -->
+    <div id="mocha"></div>
+    <script>
+        (function () {
+            'use strict';
+
+            const TIMEOUT = 10000; // Milliseconds
+            const STYLE = document.body.style;
+
+            const ACTIVE_COLOUR = 'white';
+            const INACTIVE_COLOUR = 'lightyellow';
+
+            document.addEventListener('inactive', function () {
+                STYLE.background = INACTIVE_COLOUR;
+            }, true);
+
+            document.addEventListener('active', function () {
+                STYLE.background = ACTIVE_COLOUR;
+            }, true);
+
+            describe('Active And Inactive Events', function () {
+                this.timeout(TIMEOUT);
+
+                it('changes the background colour to gold when the application' +
+                    'becomes inactive.', function (done) {
+                        setTimeout(function () {
+                            expect(STYLE.background).to.equal(INACTIVE_COLOUR);
+                            done();
+                        }, 6000);
+                    });
+
+                it('changes the background colour to white when the application' +
+                    'becomes active', function () {
+                        const event = new KeyboardEvent('keydown', { key: 'Home' });
+                        document.dispatchEvent(event);
+                        expect(STYLE.background).to.equal(ACTIVE_COLOUR);
+                    });
+            });
+        }());
+    </script>
+    <!-- do not remove the following <script> -->
+    <script>
+        mocha.run();
+    </script>
+</body>
+
+</html>
