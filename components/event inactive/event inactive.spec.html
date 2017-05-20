@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -55,8 +56,8 @@
 
                 it('changes the background colour to white when the application' +
                     'becomes active', function () {
-                        const event = new KeyboardEvent('keydown', { key: 'Home' });
-                        document.dispatchEvent(event);
+                        const EVENT = new KeyboardEvent('keydown', { key: 'Home' });
+                        document.dispatchEvent(EVENT);
                         expect(STYLE.background).to.equal(ACTIVE_COLOUR);
                     });
             });
