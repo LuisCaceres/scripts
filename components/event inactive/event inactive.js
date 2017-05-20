@@ -28,7 +28,7 @@ react to any periods of inactivity/activity. */
 
 
     /** Fires the active event.
-     * @this {Element} - The target of the user interface event.
+     * @this {HTMLDocument} - The target of the user interface event.
      * @listens Event.type === 'input'
      *          Event.type === 'scroll'
      *          KeyboardEvent.type === 'keydown'
@@ -51,11 +51,11 @@ react to any periods of inactivity/activity. */
      * @listens window#SetTimeout
      */
     function inactivityDetector() {
-        // The application becomes inactive!
         document.dispatchEvent(inactiveEvent);
     }
 
-    // The input event replaces keyboard events on mobile devices.
+    // The input event on mobile devices is the equivalent of keyboard events
+    // on a desktop computer.
     document.addEventListener('input', activityDetector, true);
     document.addEventListener('keydown', activityDetector, true);
     document.addEventListener('keyup', activityDetector, true);
