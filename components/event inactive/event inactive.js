@@ -15,11 +15,11 @@ react to any periods of inactivity/activity. */
 
     const APPLICATION_BECOMES_INACTIVE_AT = 5000; // milliseconds
 
-    const inactiveEvent = document.createEvent('Event');
-    inactiveEvent.initEvent('inactive', true, false);
+    const INACTIVE_EVENT = document.createEvent('Event');
+    INACTIVE_EVENT.initEvent('inactive', true, false);
 
-    const activeEvent = document.createEvent('Event');
-    activeEvent.initEvent('active', true, false);
+    const ACTIVE_EVENT = document.createEvent('Event');
+    ACTIVE_EVENT.initEvent('active', true, false);
 
 
     /** @type {Number} */
@@ -39,7 +39,7 @@ react to any periods of inactivity/activity. */
      *          WheelEvent.type === 'wheel' 
      */
     function activityDetector() {
-        document.dispatchEvent(activeEvent);
+        document.dispatchEvent(ACTIVE_EVENT);
         // Sets the inactivity timer back to zero and starts ticking again.
         clearTimeout(inactivityTimer);
         inactivityTimer = setTimeout(inactivityDetector,
@@ -51,7 +51,7 @@ react to any periods of inactivity/activity. */
      * @listens window#SetTimeout
      */
     function inactivityDetector() {
-        document.dispatchEvent(inactiveEvent);
+        document.dispatchEvent(INACTIVE_EVENT);
     }
 
     // The input event on mobile devices is the equivalent of keyboard events
