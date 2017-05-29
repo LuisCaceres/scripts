@@ -8,6 +8,8 @@ The order of the rule-sets is according to two factors:
   * Specificity
   * Alphabet.
   
+No descendant selectors are allowed.
+  
 For example:
 
 `
@@ -32,11 +34,13 @@ For example:
 /* BAR SECTION */
 #bar {
   background: orange;
-}
+}`
+
+The implementation of the above piece of code:
+// Remove comments;
+// Remove declaration blocks;
 
 
-
-`
 The contents of declarations blocks are irrelevant.
 
 
@@ -51,6 +55,7 @@ Install ESLINT
 
 The maximum number of lines in a JavaScript file must not exceed 100 (excluding comments).
 The maximum number of characters on a line (including indentation) is 80.
+The cyclomatic complexity of a function must not exceed 10.
 
 
 Developers are encouraged to use `const` and `let` declarations. 
