@@ -46,6 +46,9 @@ About HTML
 
 About JavaScript
 
+::: Extensions/Plugins
+Install ESLINT
+
 The maximum number of lines in a JavaScript file must not exceed 100 (excluding comments).
 The maximum number of characters on a line (including indentation) is 80.
 
