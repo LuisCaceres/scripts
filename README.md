@@ -37,9 +37,9 @@ For example:
 }`
 
 The implementation of the above piece of code:
-// Remove comments;
-// Remove declaration blocks;
-
+// Remove comments; `/\*[\W\w]*?\*/`
+// Remove declaration blocks; `/{[\S\s]*?}/` What about media queries?
+// 
 
 The contents of declarations blocks are irrelevant.
 
