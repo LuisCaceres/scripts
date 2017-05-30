@@ -38,7 +38,13 @@ For example:
 
 The implementation of the above piece of code:
 // Remove comments; `/\*[\W\w]*?\*/`
-// Remove declaration blocks; `/{[\S\s]*?}/` What about media queries?
+// Remove declaration blocks; `/{[^}]*{/` << matches the ocurrence of a { followed by any number of any characters followed by another {. This means that nesting has been detected. 
+
+Then search for the matching }. 
+If instead another { is found then that means there is further nesting. 
+   Repeat the previous steps. 
+Otherwise it means we got our very first declaration block. 
+Extract the selector from the declaration block and add it to a list.
 // 
 
 The contents of declarations blocks are irrelevant.
