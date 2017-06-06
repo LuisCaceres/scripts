@@ -1,6 +1,9 @@
 This is a list of scripts that implement various pieces of functionality commonly
 found across the World Wide Web.
 
+Requirements of a project.
+
+* No two files or folders will share the same name.
 
 About CSS
 The complexity of a selector must not exceed...
