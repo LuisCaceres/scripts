@@ -4,6 +4,7 @@ found across the World Wide Web.
 Requirements of a project.
 
 * No two files or folders will share the same name.
+* No precompilers/preprocessors are allowed. Be smart and creative about the way you code and most of all keep things simple!
 
 About CSS
 The complexity of a selector must not exceed...
