@@ -11,7 +11,7 @@
     <script src="https://cdn.rawgit.com/Automattic/expect.js/0.3.1/index.js"></script>
     <!-- do not remove the following <script> -->
     <script>
-        mocha.setup('bdd');
+       mocha.setup('bdd');
     </script>
     <!-- loads the event constructors polyfill -->
     <script src="../polyfills/event constructors.js"></script>
@@ -69,86 +69,90 @@
                 return iterable[random(0, iterable.length - 1)];
             };
 
-            var row = document.querySelector('[role=row]'),
-                cell = row.querySelector('[role=gridcell]'),
-                cells;
+            const ROW = document.querySelector('[role=row]'),
+                  CELL = ROW.querySelector('[role=gridcell]');
+
+            /** @type {Iterator} */
+            var cells;
 
             function random(min, max) {
                 return min + Math.floor(Math.random() * (max - min + 1));
             }
 
-            function foo() {
-                var numberOfCells = random(1, 100),
-                    counter = 1;
+            /** 
+              * 
+              */
+            function init() {
+                const NUMBER_OF_CELLS = random(1, 100);
+                var counter = 0;
 
-                // appends a random number of cells to the grid
-                while (counter++ < numberOfCells) {
-                    let node = cell.cloneNode();
-                    node.tabIndex = -1;
-                    node.textContent = 'gridcell ' + counter;
-                    row.appendChild(node);
+                // Appends a random number of cells to the grid
+                while (counter++ < NUMBER_OF_CELLS) {
+                    const NODE = CELL.cloneNode();
+                    NODE.tabIndex = -1;
+                    NODE.textContent = 'gridcell ' + counter;
+                    ROW.appendChild(NODE);
                 }
 
-                cells = new Iterator(row.children);
+                // Constructs an iterator for the cells in the grid.
+                cells = new Iterator(ROW.children);
+                cells.autoreset = true;
 
-                // picks a random cell from the grid and gives it focus
+                // Picks a random cell from the grid and gives it focus.
                 cells.random().focus();
             }
 
             describe('Directional Navigation', function () {
-                beforeEach(function (done) {
-                    foo();
-                    setTimeout(done, 0);
-                });
+                beforeEach(init);
 
                 it('selects the first cell when the "home" key is pressed.', function () {
-                    var event = new KeyboardEvent('keydown', { key: 'Home' });
-                    document.activeElement.dispatchEvent(event);
+                    const EVENT = new KeyboardEvent('keydown', { key: 'Home' });
+                    document.activeElement.dispatchEvent(EVENT);
                     expect(document.activeElement).to.equal(cells.first());
                 });
 
                 it('selects the last cell when the "end" key is pressed.', function () {
-                    var event = new KeyboardEvent('keydown', { key: 'End' });
-                    document.activeElement.dispatchEvent(event);
+                    const EVENT = new KeyboardEvent('keydown', { key: 'End' });
+                    document.activeElement.dispatchEvent(EVENT);
                     expect(document.activeElement).to.equal(cells.last());
                 });
 
                 it('selects the previous cell when the "left arrow" key is pressed.', function () {
-                    var event = new KeyboardEvent('keydown', { key: 'ArrowLeft' });
+                    const EVENT = new KeyboardEvent('keydown', { key: 'ArrowLeft' });
                     cells.positionAt(document.activeElement);
-                    document.activeElement.dispatchEvent(event);
-                    expect(document.activeElement).to.equal(cells.previous() || cells.first());
+                    document.activeElement.dispatchEvent(EVENT);
+                    expect(document.activeElement).to.equal(cells.previous());
                 });
 
                 it('selects the previous cell when the "up arrow" key is pressed.', function () {
-                    var event = new KeyboardEvent('keydown', { key: 'ArrowUp' });
+                    const EVENT = new KeyboardEvent('keydown', { key: 'ArrowUp' });
                     cells.positionAt(document.activeElement);
-                    document.activeElement.dispatchEvent(event);
-                    expect(document.activeElement).to.equal(cells.previous() || cells.first());
+                    document.activeElement.dispatchEvent(EVENT);
+                    expect(document.activeElement).to.equal(cells.previous());
                 });
 
                 it('selects the next cell when the "right arrow" key is pressed.', function () {
-                    var event = new KeyboardEvent('keydown', { key: 'ArrowRight' });
+                    const EVENT = new KeyboardEvent('keydown', { key: 'ArrowRight' });
                     cells.positionAt(document.activeElement);
-                    document.activeElement.dispatchEvent(event);
-                    expect(document.activeElement).to.equal(cells.next() || cells.last());
+                    document.activeElement.dispatchEvent(EVENT);
+                    expect(document.activeElement).to.equal(cells.next());
                 });
 
                 it('selects the next cell when the "down arrow" key is pressed.', function () {
-                    var event = new KeyboardEvent('keydown', { key: 'ArrowDown' });
+                    const EVENT = new KeyboardEvent('keydown', { key: 'ArrowDown' });
                     cells.positionAt(document.activeElement);
-                    document.activeElement.dispatchEvent(event);
-                    expect(document.activeElement).to.equal(cells.next() || cells.last());
+                    document.activeElement.dispatchEvent(EVENT);
+                    expect(document.activeElement).to.equal(cells.next());
                 });
 
                 // removes each of the cells from the grid
                 afterEach(function () {
-                    row.innerHTML = '';
-                    cell.textContent = 'gridcell ' + 0;
-                    row.appendChild(cell);    
+                    ROW.innerHTML = '';
+                    CELL.textContent = 'gridcell ' + 0;
+                    ROW.appendChild(CELL);    
                 });
 
-                after(foo);
+                after(init);
             });
         }());
     </script>
