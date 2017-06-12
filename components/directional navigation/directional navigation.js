@@ -35,12 +35,12 @@ of code enables directional navigation for a composite widget. */
      * @listens FocusEvent#type === 'focus'
      */
     function compositeWidgetDetector() {
-        var activeElement = document.activeElement;
+        const ACTIVE_ELEMENT = document.activeElement;
 
-        if (isPartOfCompositeWidget(activeElement)) {
+        if (isPartOfCompositeWidget(ACTIVE_ELEMENT)) {
             // The widget reacts to some key presses while it has focus.
-            activeElement.addEventListener('blur', blurHandler);
-            activeElement.addEventListener('keydown', keydownHandler);
+            ACTIVE_ELEMENT.addEventListener('blur', blurHandler);
+            ACTIVE_ELEMENT.addEventListener('keydown', keydownHandler);
         }
     }
 
@@ -81,10 +81,10 @@ of code enables directional navigation for a composite widget. */
      */
     function keydownHandler(event) {
         // Finds out which active descendant the user wishes to select.
-        var destination = getDestinationBasedOn(event.key);
+        const DESTINATION = getDestinationBasedOn(event.key);
 
         // As long as there is a destination.
-        if (destination !== NONE) {
+        if (DESTINATION !== NONE) {
             // Constructs a list of active descendants.
             let siblings = Array.from(this.parentElement.children)
                 .filter(isPartOfCompositeWidget);
@@ -96,7 +96,7 @@ of code enables directional navigation for a composite widget. */
             siblings.positionAt(this);
 
             // Selects an active descendant according to the destination.
-            switch (destination) {
+            switch (DESTINATION) {
                 case LAST:
                     siblings.last();
                     break;
@@ -111,10 +111,6 @@ of code enables directional navigation for a composite widget. */
                     break;
             }
 
-            // Ensures the parent widget has only 1 active descendant with a
-            // tabindex value of 0.
-            this.tabIndex = -1;
-            siblings.current().tabIndex = 0;
             siblings.current().focus();
 
             // Prevents scrolling when pressing arrow keys.
@@ -122,5 +118,5 @@ of code enables directional navigation for a composite widget. */
         }
     };
     
-    document.addEventListener('focus', compositeWidgetDetector, true);
+    document.addEventListener('focusin', compositeWidgetDetector, true);
 }());
