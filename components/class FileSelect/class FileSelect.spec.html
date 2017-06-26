@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>class FileSelect</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.css" rel="stylesheet">
+    <!-- loads test framework -->
+    <script src="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.js"></script>
+    <!-- loads a library assertion -->
+    <script src="https://cdn.rawgit.com/Automattic/expect.js/0.3.1/index.js"></script>
+    <!-- do not remove the following <script> -->
+    <script>
+        mocha.setup('bdd');
+    </script>
+    <!-- loads the event constructors polyfill -->
+    <script src="../polyfills/event constructors.js"></script>
+    <!-- loads code to be tested. Add more script tags if necessary -->
+    <script src="class FileSelect.js"></script>
+    <style>
+        .attachment {
+            padding: 16px;
+            background: goldenrod;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <form multiple>
+        <div role="grid">
+            <div role="row">
+            </div>
+        </div>
+        <input type="file" multiple required/>
+        <button type="submit">Submit!</button>
+    </form>
+
+    <!-- do not remove the following <div> -->
+    <div id="mocha"></div>
+    <script>
+        (function () {
+            'use strict';
+            describe('A group of unit tests!', function () {
+                it('Is a unit test!');
+            });
+        }());
+    </script>
+    <!-- do not remove the following <script> -->
+    <script>
+        mocha.run();
+    </script>
+</body>
+
+</html>
