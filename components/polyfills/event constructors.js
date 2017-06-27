@@ -3,6 +3,20 @@
 (function () {
     'use strict';
 
+    if (typeof Event !== 'function') {
+        Event = function Event(type, eventInitDict) {
+            const event = document.createEvent('CustomEvent');
+            // Parameters are type, canBubble, cancelable, detail.
+            event.initCustomEvent(type, true, true, undefined);
+
+            for (let key in eventInitDict) {
+                event[key] = eventInitDict[key];
+            }
+
+            return event;
+        }
+    }
+
     if (typeof FocusEvent !== 'function') {
         FocusEvent = function FocusEvent(type, eventInitDict) {
             const EVENT = document.createEvent('CustomEvent');
@@ -29,7 +43,6 @@
         }
     }
 
-
     if (typeof KeyboardEvent !== 'function') {
         KeyboardEvent = function KeyboardEvent(type, eventInitDict) {
             const EVENT = document.createEvent('CustomEvent');
@@ -44,5 +57,3 @@
         }
     }
  }());
-
-
