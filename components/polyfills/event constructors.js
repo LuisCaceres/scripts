@@ -4,14 +4,23 @@
     'use strict';
 
     if (typeof Event !== 'function') {
+        /** Create a new Event.
+         * @param {String} type - The name of the event.
+         * @return {CustomEvent}
+         */
         Event = function Event(type, eventInitDict) {
-            const event = document.createEvent('CustomEvent');
-            // Parameters are type, canBubble, cancelable, detail.
-            event.initCustomEvent(type, true, true, undefined);
+            // Get the configuration of the event.
+            eventInitDict = eventInitDict || {};
 
-            for (let key in eventInitDict) {
-                event[key] = eventInitDict[key];
-            }
+            /** @type {Boolean} */
+            const bubbles = eventInitDict.bubbles;
+            /** @type {Boolean} */
+            const cancellable = eventInitDict.cancellable;
+
+            // Create an event.
+            const event = document.createEvent('CustomEvent');
+            // Apply the configuration of the event.
+            event.initCustomEvent(type, bubbles, cancellable, undefined);
 
             return event;
         }
