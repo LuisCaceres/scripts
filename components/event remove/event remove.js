@@ -9,19 +9,7 @@ event called 'remove'. */
     "use strict";
 
     // creates a 'remove' event for the application to listen for
-    var deleteEvent = document.createEvent('Event');
-    deleteEvent.initEvent('remove', true, true);
-
-    // addresses an issue with 'defaultPrevented' on Internet Explorer. 'defaultPrevented' 
-    // always returns false even if 'preventDefault()' is called. 
-    deleteEvent.preventDefault = function () {
-        if (!this.hasOwnProperty('defaultPrevented')) {
-            Object.defineProperty(this, 'defaultPrevented', {
-                configurable: true,
-                get: function () { return true; },
-            });
-        }
-    };
+    var removeEvent = new Event('remove');
 
     // an element that allows removal MUST be associated with a delete button. The following
     // IIFE implements the behaviour of a delete button.
@@ -30,27 +18,20 @@ event called 'remove'. */
         // once an element gains focus the program verifies if the element is a delete button
         document.addEventListener('click', function deleteButtonDetector(event) {
 
-            if (event.target.matches('.js-delete-button')) {    
+            if (event.target.matches('.delete-button')) {
                 let deleteButton = event.target,
                     removee;
 
-            // when the delete button is pressed the program traverses the DOM 
-            // tree in search of the elements the delete button controls
-            var removees = IDReferenceList(deleteButton.getAttribute('aria-controls'));
-            removees = new Iterator(removees);
+                // when the delete button is pressed the program traverses the DOM 
+                // tree in search of the elements the delete button controls
+                var removees = IDReferenceList(deleteButton.getAttribute('aria-controls'));
+                removees = new Iterator(removees);
 
-            // once found, the program removes the elements unless 'preventDefault()' was called
-            while (removee = removees.next()) {
-                removee.dispatchEvent(deleteEvent);
-
-                if (!deleteEvent.defaultPrevented) {
+                // once found, the program removes the elements unless 'preventDefault()' was called
+                while (removee = removees.next()) {
+                    removee.dispatchEvent(removeEvent);
                     removee.remove();
                 }
-            }
-
-            // please refer to comment on line 15
-            delete deleteEvent.defaultPrevented;
-            event.stopPropagation();              
             }
         });
     })();
@@ -73,7 +54,7 @@ event called 'remove'. */
 
                 if (deleteButton) {
                     // at this point it is clear the currently focused element allows removal
-                    let removee = activeElement;      
+                    let removee = activeElement;
                     removee.deleteButton = deleteButton;
                     removee.addEventListener('blur', blurHandler);
                     removee.addEventListener('keydown', keydownHandler);
@@ -98,19 +79,11 @@ event called 'remove'. */
             if (event.keyCode === 46) {
 
                 // notifies the application about the removal operation
-                removee.dispatchEvent(deleteEvent);
-            
+                removee.dispatchEvent(removeEvent);
+
                 // at this point it is clear the currently focused element will be removed
-                // unless 'preventDefault()' was called.
-                if (deleteEvent.defaultPrevented === false) {
-                    removee.remove();
-                    removee.deleteButton.remove();
-                }
-
-                // please refer to comment on line 15
-                delete deleteEvent.defaultPrevented;
-
-                event.stopPropagation();
+                removee.remove();
+                removee.deleteButton.remove();
             }
         };
     })();
