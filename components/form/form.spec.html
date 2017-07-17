@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.css" rel="stylesheet">
+    <!-- loads test framework -->
+    <script src="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.js"></script>
+    <!-- loads a library assertion -->
+    <script src="https://cdn.rawgit.com/Automattic/expect.js/0.3.1/index.js"></script>
+    <!-- do not remove the following <script> -->
+    <script>
+        mocha.setup('bdd');
+    </script>
+    <!-- loads the event constructors polyfill -->
+    <script src="../polyfills/event constructors.js"></script>
+    <!-- loads code to be tested. Add more script tags if necessary -->
+    <style>
+        .label {
+            display: block;
+        }
+
+        .label-radio-button {
+            cursor: pointer;
+        }
+
+        .radio-button:checked+.label-radio-button {
+            background: black;
+            color: white;
+        }
+
+        .radio-button {
+            width: 1px;
+            height: 1px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Tell Us About Your Home</h1>
+    <form>
+        <fieldset>
+            <legend>Address: YOUR INFORMATION IS PRIVATE</legend>
+            <label for="a1">Address</label>
+            <input id="a1" name="a1" required>
+            <label for="a2">Address 2</label>
+            <input id="a2" name="a2">
+            <label for="a3">City</label>
+            <input id="a3" name="a3" required>
+            <label for="a4">State</label>
+            <input id="a4" name="a4" required>
+            <label for="a5">Postcode</label>
+            <input id="a5" name="a5" required>
+        </fieldset>
+        <fieldset>
+            <legend>Bed & Bath WHAT IS YOUR HOME LIKE?</legend>
+            <label for="a6">Home Type</label>
+            <select id="a6" name="a6">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            <label for="a7">Room Type</label>
+            <select id="a7" name="a7">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            <label for="a8">Bedrooms</label>
+            <select id="a8" name="a8">
+                <option value="">1</option>
+                <option value="">2</option>
+                <option value="">3</option>
+                <option value="">4</option>
+                <option value="">5</option>
+            </select>
+            <label for="a9">Bathrooms</label>
+            <select id="a9" name="a9">
+                <option value="">1</option>
+                <option value="">2</option>
+                <option value="">3</option>
+                <option value="">4</option>
+                <option value="">5</option>
+            </select>
+            <label for="a10">King</label>
+            <select id="a10" name="a10">
+                <option value="">1</option>
+                <option value="">2</option>
+                <option value="">3</option>
+                <option value="">4</option>
+                <option value="">5</option>
+            </select>
+            <label for="a11">Queen</label>
+            <select id="a11" name="a11">
+                <option value="">1</option>
+                <option value="">2</option>
+                <option value="">3</option>
+                <option value="">4</option>
+                <option value="">5</option>
+            </select>
+            <label for="a12">Full</label>
+            <select id="a12" name="a12">
+                <option value="">1</option>
+                <option value="">2</option>
+                <option value="">3</option>
+                <option value="">4</option>
+                <option value="">5</option>
+            </select>
+            <label for="a13">Twin</label>
+            <select id="a13" name="a13">
+                <option value="">1</option>
+                <option value="">2</option>
+                <option value="">3</option>
+                <option value="">4</option>
+                <option value="">5</option>
+            </select>
+        </fieldset>
+
+        <label for="a14">Tell us about yourself</label>
+        <textarea id="a14" name="a14" required></textarea>
+
+        <fieldset>
+            <legend>Choose your preferred availability</legend>
+            <input class="radio-button" id="a16" name="a15" required type="radio" value="">
+            <label class="label-radio-button" for="a16">Morning</label>
+            <input class="email-field radio-button" id="a17" name="a15" required type="radio" value="">
+            <label class="label-radio-button" for="a17">Afternoon</label>
+            <input class="phone-field radio-button" id="a18" name="a15" required type="radio" value="">
+            <label class="label-radio-button" for="a18">Evening</label>
+        </fieldset>
+
+        <label class="label" for="19">Upload a picture of your home</label>
+        <input id="19" name="a19" required type="file">
+
+        <label class="label" for="a20">Please select a date</label>
+        <input id="a20" name="a20" pattern="((\d{2})[^\d]){2}\2" type="date" required>
+
+        <label class="label" for="a21">Please select a time</label>
+        <input id="a21" name="a21" type="time" required>
+
+        <button>Sign me up!</button>
+    </form>
+
+
+    <!-- do not remove the following <div> -->
+    <div id="mocha"></div>
+    <script>
+        (function () {
+            'use strict';
+            describe('A group of unit tests!', function () {
+                it('Is a unit test!', function () {
+                    expect('Hello world!').to.be('Hello world!');
+                });
+            });
+        }());
+    </script>
+    <!-- do not remove the following <script> -->
+    <script>
+        mocha.run();
+    </script>
+</body>
+
+</html>
+
+<!-- NOTES: 
+Hidden form controls that are required will stop the form from submitting.
+A class value of 'js-optional' has been added to identify such form controls.
+On form submit these form controls must be disabled.
+-->
