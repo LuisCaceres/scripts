@@ -65,4 +65,51 @@
             return EVENT;
         }
     }
- }());
+
+    if (typeof MouseEvent !== 'function') {
+
+        // Let 'dictionary' be a collection of key-value pairs used to initialize a mouse event object.
+        let dictionary = {
+            button: 0,
+            buttons: 0,
+            clientX: 0,
+            clientY: 0,
+            relatedTarget: null,
+            screenX: 0,
+            screenY: 0
+        };
+
+        /** Create a new mouse event.
+         * @param {String} type - The name of the mouse event.
+         * @param {MouseEventInit} eventInitDict - Information about the mouse event.
+         * @return {CustomEvent} - A mouse event object.
+         */
+        MouseEvent = function MouseEvent(type, eventInitDict) {
+            eventInitDict = eventInitDict || {};
+
+            /** @type {Boolean} */
+            // Let 'bubbles' be an indication of whether the event bubbles.
+            const bubbles = eventInitDict.bubbles;
+            /** @type {Boolean} */
+            // Let 'cancellable' be an indication of whether the event is cancellable.
+            const cancellable = eventInitDict.cancellable;
+
+            // Let 'event' be a mouse event object.
+            const event = document.createEvent('CustomEvent');
+            // Initialize 'event' accordingly.
+            event.initCustomEvent(type, bubbles, cancellable, undefined);
+
+            // Configure 'event' taking into account 'dictionary'.
+            for (let key in dictionary) {
+                Object.defineProperty(event, key, {
+                    configurable: false,
+                    // Use default value if not explicitly specified by 'eventInitDict'.
+                    value: eventInitDict[key] || dictionary[key],
+                    writable: false
+                })
+            }
+
+            return event;
+        }
+    }
+}());
