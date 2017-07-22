@@ -1,0 +1,19 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "css.lint.float": "error",
+    "css.lint.important": "error",
+    "css.lint.universalSelector": "error",
+    "css.lint.zeroUnits": "warning",
+    "editor.fontSize": 13,
+    "editor.formatOnType": true,
+    "editor.formatOnPaste": true,
+    "editor.minimap.enabled": false,
+    "eslint.enable": true,
+    "workbench.welcome.enabled": false,
+    "window.zoomLevel": 0,
+    "workbench.colorTheme": "Visual Studio Light",
+    "[javascript]": {
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 80
+    }
+}
