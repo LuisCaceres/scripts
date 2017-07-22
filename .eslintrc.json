@@ -1,0 +1,38 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es6": true,
+        "node": true
+    },
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "sourceType": "script"
+    },
+    "rules": {
+        "complexity": ["warn", 10],
+        "constructor-super": "warn",
+        "max-lines": ["warn", { "max": 100, "skipComments": true}],
+        "no-compare-neg-zero": "warn",
+        "no-const-assign": "warn",
+        "no-empty": "warn",
+        "no-empty-function": "warn",
+        "no-extra-parens": "warn",
+        "no-invalid-this": "warn",
+        "no-magic-numbers": "warn",
+        "no-multi-str": "warn",
+        "no-return-assign" : "warn",
+        "no-sparse-arrays": "warn",
+        "no-this-before-super": "warn",
+        "no-undef": "warn",
+        "no-unreachable": "warn",
+        "no-unused-vars": "warn",
+        "strict": ["warn", "function"],
+        "use-isnan": "warn",
+        "valid-typeof": "warn",
+        "vars-on-top": "warn",
+        "wrap-iife": "warn"
+    }
+}
