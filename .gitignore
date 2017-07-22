@@ -1,6 +1,3 @@
-# jade files are ignored to give preference to html files.
-*.jade
-
 # VS Code stuff such as debuggin settings
 /.vscode
 
