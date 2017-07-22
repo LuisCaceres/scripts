@@ -7,8 +7,5 @@
 # JavaScript Code coverage by Istanbul
 /components/*/coverage
 
-# ESLint stuff (JavaScript linter)
-.eslintrc.json
-
 # Node stuff
 /node_modules
