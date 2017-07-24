@@ -10,6 +10,7 @@ issues.*/
 
     /** @type {Map<HTMLInputElement, [File]>} */
     // Let 'controls' be an empty map of file select controls and lists of files.
+    const controls = new Map();
 
     // Let 'SELECTOR' be a CSS selector that matches a file select control.
     const SELECTOR = 'input[type=file]';
@@ -19,33 +20,35 @@ issues.*/
      * @param {Event} event
      * @listens Event#change
      */
-    function maintainListOfFiles(event) {
+    function onChange(event) {
         // Let 'target' be the target of the event.
         const target = event.target;
 
         // If 'target' is a file select control.
         if (target.matches(SELECTOR)) {
-            if (!fileSelects.has(fileSelect)) {
             // Let 'control' be 'target'.
+            const control = target;
             // If 'control' is not associated with a list of files.
+            if (!controls.has(control)) {
                 // Let 'list' be an empty list of files.
                 const list = [];
                 // Specify the size of 'list' as zero bits.
                 list.size = 0;
-                fileSelects.set(fileSelect, list);
                 // Associate 'control' with 'list'.
+                controls.set(control, list);
             }
 
             // Let 'list' be the list of files associated with 'control'.
+            const list = controls.get(control);
 
-            Array.from(fileSelect.files)
             // For each file currently selected by 'control'.
+            Array.from(control.files)
                 .forEach(function (file) {
                     // Let 'file' be a file currently selected by 'control'.
                     // If 'file' is not present in 'list'.
                     if (!list.some(isDuplicate(file, 'name'))) {
-                        let RESPONSE = onWillAddFile(file, list, fileSelect);
                         // Fire an onWillAddFile event.
+                        let RESPONSE = onWillAddFile(file, list, control);
 
                         // If the event returns a truthy value.
                         if (RESPONSE) {
@@ -53,8 +56,8 @@ issues.*/
                             list.push(file);
                             // (Re)calculate the size of 'list'.
                             list.size += file.size;
-                            onDidAddFile(file, list, fileSelect);
                             // Trigger an onDidAddFile event.
+                            onDidAddFile(file, list, control);
                         }
                     }
                 });
@@ -83,7 +86,9 @@ issues.*/
      * holds 'file'.
      * @returns {Boolean} - Whether 'file' will be added 'list'.
      */
-    function onWillAddFile(file, list, fileSelect) {}
+    function onWillAddFile(file, list, control) {
+        return true;
+    }
 
 
     /** Perform an action after a file has been added to the list of files.
@@ -93,7 +98,7 @@ issues.*/
      * @param {HTMLInputElement} control - The file select control that is
      * associated with 'file'.
      */
-    function onDidAddFile(file, fileList, fileSelect) {
+    function onDidAddFile(file, list, control) {
         let row = document.querySelector('[role=row]');
         let cell = document.createElement('div');
         cell.setAttribute('role', 'gridcell');
@@ -109,8 +114,8 @@ issues.*/
      */
     function onDidRemoveFile(event) {}
 
-    window.addEventListener('change', maintainListOfFiles, true);
     // Listen for change events originating from file select controls.
+    window.addEventListener('change', onChange, true);
     // Listen for remove events originating from a file.
     window.addEventListener('remove', onDidRemoveFile, true);
 }());
