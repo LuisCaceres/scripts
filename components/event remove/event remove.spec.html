@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>event remove</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.css" rel="stylesheet">
+    <!-- loads test framework -->
+    <script src="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.js"></script>
+    <!-- loads a library assertion -->
+    <script src="https://cdn.rawgit.com/Automattic/expect.js/0.3.1/index.js"></script>
+    <!-- do not remove the following <script> -->
+    <script>
+        mocha.setup('bdd');
+    </script>
+    <!-- loads the event constructors polyfill -->
+    <script src="../polyfills/event constructors.js"></script>
+    <script src="../polyfills/polyfills.js"></script>
+    <!-- loads code to be tested. Add more script tags if necessary -->
+    <script src="../Class Iterator/Class Iterator.js"></script>    
+    <script src="event remove.js"></script>
+    <style></style>
+</head>
+
+<body>
+    <div role="grid">
+        <div role="row">
+            <div id="a" role="gridcell"> Passenger 1
+                <button class="delete-button" aria-controls="a">Delete!</button>
+            </div>
+        </div>
+    </div>
+    <!-- do not remove the following <div> -->
+    <div id="mocha"></div>
+    <script>
+        (function () {
+            'use strict';
+
+            // Let 'counter' be the number of items removed from the page.
+            var counter = 0;
+
+            // Listen to any remove events originating in the window.
+            window.addEventListener('remove', function (event) {
+                counter++;
+            }, true);
+            
+            describe('A group of unit tests!', function () {
+                it('Removes the item when the remove button is pressed', function () {
+                    // Let 'button' be the remove button on the page.
+                    const button = document.querySelector('button');
+                    // Press 'button'.
+                    button.click();
+                    // Assert.
+                    expect(counter).to.be(1);
+                });
+            });
+        }());
+    </script>
+    <!-- do not remove the following <script> -->
+    <script>
+        mocha.run();
+    </script>
+</body>
+<!-- The FocusEvent and MouseEvent constructors did not work.  -->
+</html>
