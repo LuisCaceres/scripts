@@ -1,9 +1,9 @@
 /* Sometimes it is desired that an event is triggered in response to the removal
-of an element from the DOM tree. For example, a shopping application could intercept
-the deletion of an item from the basket and make sure the user wishes to proceeed. 
-Likewise, an application could set focus to another element once the currently 
-focused element is removed. The following piece of code implements a new type of 
-event called 'remove'. */
+of an element from the DOM tree. For example, a shopping application could
+intercept the deletion of an item from the basket and make sure the user wishes
+to proceeed with the removal. Likewise, an application could set focus to
+another element once the currently focused element is removed. The following
+piece of code implements a new type of event called 'remove'. */
 
 (function () {
     "use strict";
