@@ -48,8 +48,9 @@
                 it('Removes the item when the remove button is pressed', function () {
                     // Let 'button' be the remove button on the page.
                     const button = document.querySelector('button');
+                    const event = new PointerEvent('pointerdown');
                     // Press 'button'.
-                    button.click();
+                    button.dispatchEvent(event);
                     // Assert.
                     expect(counter).to.be(1);
                 });
