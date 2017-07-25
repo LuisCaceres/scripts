@@ -46,7 +46,7 @@ issues.*/
                 .forEach(function (file) {
                     // Let 'file' be a file currently selected by 'control'.
                     // If 'file' is not present in 'list'.
-                    if (!list.some(isDuplicate(file, 'name'))) {
+                    if (!isDuplicate(file.name, list)) {
                         // Fire an onWillAddFile event.
                         let RESPONSE = onWillAddFile(file, list, control);
 
@@ -65,17 +65,26 @@ issues.*/
     }
 
 
-    /** Check if a file already exists in the list of files associated with a
+    /** Check if a file already exists in a list of files associated with a
      * file select control.
-     * @param {File} fileA - The file provided.
-     * @param {String} key - The name of a property in 'file'.
-     * @returns {Function} -  The function to be passed to 
+     * @param {String} name - The name of a file.
+     * @param {Map<HTMLElement, File>} list - A list of files associated with a
+     * file select control.
+     * @returns {Boolean} - Whether a file in 'list' has the same name as
+     * 'name'.
      */
-    function isDuplicate(fileA, key) {
-        return function (fileB) {
-            // Check if the name of 'fileA' is already the name of another file.
-            return fileA[key] === fileB[key];
-        }
+    function isDuplicate(name, list) {
+        /** @type {[String]} */
+        // Let 'names' be an empty list of file names.
+        const names = [];
+        // For each file in 'list'.
+        list.forEach(function (file) {
+            // Let 'file' be the current file.
+            // Add the name of 'file' to 'names'.
+            names.push(file.name);
+        });
+        // Check if 'name' is present in 'names'.
+        return names.includes(name);
     }
 
 
