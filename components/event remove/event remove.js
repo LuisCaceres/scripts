@@ -8,28 +8,29 @@ event called 'remove'. */
 (function () {
     "use strict";
 
-    // creates a 'remove' event for the application to listen for
+    // Let 'event' be a remove event.
     var removeEvent = new Event('remove');
 
-    // an element that allows removal MUST be associated with a delete button. The following
-    // IIFE implements the behaviour of a delete button.
     (function () {
 
-        // once an element gains focus the program verifies if the element is a delete button
+        // Listen for click events originating anywhere in the application.
         document.addEventListener('click', function deleteButtonDetector(event) {
-
+            // Let 'target' be the target of the event.
+            // If 'target' is a button able to remove its associated element.
             if (event.target.matches('.delete-button')) {
+                // Let 'button' be 'target'.
                 let deleteButton = event.target,
                     removee;
 
-                // when the delete button is pressed the program traverses the DOM 
-                // tree in search of the elements the delete button controls
+                // Let 'id' be the id of 'button's associated element. 
+                // Let 'element' be 'button's associated element.
                 var removees = IDReferenceList(deleteButton.getAttribute('aria-controls'));
                 removees = new Iterator(removees);
 
-                // once found, the program removes the elements unless 'preventDefault()' was called
                 while (removee = removees.next()) {
+                    // Fire a remove event.
                     removee.dispatchEvent(removeEvent);
+                    // Remove 'element'.
                     removee.remove();
                 }
             }
@@ -37,52 +38,67 @@ event called 'remove'. */
     })();
 
 
-
-
-    // This IIFE implements the behaviour for an element that allows removal (removee). 
     (function () {
 
-        // once an element gains focus the program verifies if the currently focused element
-        // is associated with a delete button
+        // Listen for focus events originating anywhere in the application.
         document.addEventListener('focus', function removeeDetector(event) {
+            // Let 'target' be the target of the event.
             var activeElement = document.activeElement,
                 id;
 
+            // If 'target' has a value for its id attribute.
             if (id = activeElement.id) {
-                // searches for a delete button (if any)
+                // Look for a button that is able to remove 'target'.
                 let deleteButton = document.querySelector('[aria-controls*=' + id + ']');
 
+                // If there is a button able to remove 'target'.
+                // Let 'button' be the button able to remove 'target'.
                 if (deleteButton) {
-                    // at this point it is clear the currently focused element allows removal
+                    // Let 'element' be 'target'.
                     let removee = activeElement;
+                    // Associate 'element' with 'target'.
                     removee.deleteButton = deleteButton;
+                    // Listen for 'focusout' events originating at 'element'.
                     removee.addEventListener('blur', blurHandler);
+                    // Listen for 'keydown' events originating at 'element'.
                     removee.addEventListener('keydown', keydownHandler);
                 }
             }
         }, true);
 
 
+        /** Remove event handlers associated with an element that may be
+         * removed.
+         * @param {Event} event 
+         */
         var blurHandler = function blurHandler(event) {
+            /** @type {HTMLElement} */
+            // Let 'element' be an HTML element that may be removed.
             var removee = this;
+            // Stop listening for 'focusout' events fired at 'element'.
             removee.removeEventListener('blur', blurHandler);
+            // Stop listening for 'keydown' events fired at 'element'.
             removee.removeEventListener('keydown', keydownHandler);
             event.stopPropagation();
         };
 
 
-        // an element may be removed when pressing the 'delete' key
+        /** Remove an element when the 'DELETE' key is pressed.
+         * @param {KeyboardEvent} event
+         * @listens KeyboardEvent.type === 'keydown'
+         */
         var keydownHandler = function keydownHandler(event) {
+            /** @type {HTMLElement} */
+            // Let 'element' be the element to be removed.
             var removee = this;
 
-            // key code represents the delete key
+            // If the 'DELETE' key was pressed.
             if (event.keyCode === 46) {
-
-                // notifies the application about the removal operation
+                // Fire a remove event.
                 removee.dispatchEvent(removeEvent);
-
-                // at this point it is clear the currently focused element will be removed
+                // Remove 'element'.
                 removee.remove();
+                // Remove the delete button associated with 'element'.
                 removee.deleteButton.remove();
             }
         };
