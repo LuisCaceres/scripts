@@ -13,8 +13,10 @@ event called 'remove'. */
 
     (function () {
 
-        // Listen for click events originating anywhere in the application.
-        document.addEventListener('click', function deleteButtonDetector(event) {
+        /** Attempt to detect a button able to delete its associated element.
+         * @param {PointerEvent} event
+         */
+        function onPointerDown(event) {
             // Let 'target' be the target of the event.
             // If 'target' is a button able to remove its associated element.
             if (event.target.matches('.delete-button')) {
@@ -32,11 +34,17 @@ event called 'remove'. */
         });
     })();
 
+        // Listen for pointerdown events firing anywhere in the application.
+        window.addEventListener('pointerdown', onPointerDown, true);
+
 
     (function () {
 
-        // Listen for focus events originating anywhere in the application.
-        document.addEventListener('focus', function removeeDetector(event) {
+        /** Attempt to detect an element that may be removed.
+         * @param {FocusEvent} event
+         * @listens FocusEvent.type === 'focusin'
+         */
+        function onFocusIn(event) {
             // Let 'target' be the target of the event.
             var activeElement = document.activeElement,
                 id;
@@ -54,7 +62,7 @@ event called 'remove'. */
                     // Associate 'element' with 'target'.
                     removee.deleteButton = deleteButton;
                     // Listen for 'focusout' events originating at 'element'.
-                    removee.addEventListener('blur', blurHandler);
+                    element.addEventListener('focusout', onFocusOut, true);
                     // Listen for 'keydown' events originating at 'element'.
                     removee.addEventListener('keydown', keydownHandler);
                 }
@@ -64,14 +72,14 @@ event called 'remove'. */
 
         /** Remove event handlers associated with an element that may be
          * removed.
-         * @param {Event} event 
+         * @param {FocusEvent} event 
          */
-        var blurHandler = function blurHandler(event) {
+        function onFocusOut(event) {
             /** @type {HTMLElement} */
             // Let 'element' be an HTML element that may be removed.
             var removee = this;
             // Stop listening for 'focusout' events fired at 'element'.
-            removee.removeEventListener('blur', blurHandler);
+            element.removeEventListener('focusout', onFocusOut, true);
             // Stop listening for 'keydown' events fired at 'element'.
             removee.removeEventListener('keydown', keydownHandler);
             event.stopPropagation();
@@ -98,3 +106,6 @@ event called 'remove'. */
             }
         };
     })();
+
+        // Listen for focusin events originating anywhere in the application.
+        window.addEventListener('focusin', onFocusIn, true);
