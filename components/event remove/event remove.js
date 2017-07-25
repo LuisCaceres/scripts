@@ -19,20 +19,15 @@ event called 'remove'. */
             // If 'target' is a button able to remove its associated element.
             if (event.target.matches('.delete-button')) {
                 // Let 'button' be 'target'.
-                let deleteButton = event.target,
-                    removee;
-
-                // Let 'id' be the id of 'button's associated element. 
+                const button = target;
+                // Let 'SELECTOR' be a CSS selector matching 'button's associated element.
+                const SELECTOR = '#' + button.getAttribute('aria-controls');
                 // Let 'element' be 'button's associated element.
-                var removees = IDReferenceList(deleteButton.getAttribute('aria-controls'));
-                removees = new Iterator(removees);
-
-                while (removee = removees.next()) {
-                    // Fire a remove event.
-                    removee.dispatchEvent(removeEvent);
-                    // Remove 'element'.
-                    removee.remove();
-                }
+                const element = document.querySelector(SELECTOR);
+                // Fire a remove event.
+                element.dispatchEvent(removeEvent);
+                // Remove 'element'.
+                element.remove();
             }
         });
     })();
@@ -103,20 +98,3 @@ event called 'remove'. */
             }
         };
     })();
-
-
-    // given a string of id values it returns an array containing elements that
-    // matching those values.   
-    function IDReferenceList(string) {
-        // let's just have one space in between references
-        return string.replace(/\s+/g, " ")
-            // let's prepend the hash sign to each reference
-            .replace(/(^|\s)(?=[A-z])/g, " #")
-            // let's get rid of extra white space 
-            .trim()
-            // let's create an array of references
-            .split(/\s/)
-            // let's map those refences to actual elements
-            .map(document.querySelector, document);
-    }
-})();
