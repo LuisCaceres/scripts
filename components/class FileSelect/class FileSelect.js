@@ -8,8 +8,8 @@ issues.*/
 (function () {
     'use strict';
 
-    /** @type {Map<HTMLInputElement, [File]>} */
-    // Let 'controls' be an empty map of file select controls and lists of files.
+    /** @type {Map<HTMLInputElement, Map<HTMLElement,File>} */
+    // Let 'controls' be a list of links between a file select control and a list of files.
     const controls = new Map();
 
     // Let 'SELECTOR' be a CSS selector that matches a file select control.
@@ -31,9 +31,9 @@ issues.*/
             // If 'control' is not associated with a list of files.
             if (!controls.has(control)) {
                 // Let 'list' be an empty list of files.
-                const list = [];
+                const list = new Map();
                 // Specify the size of 'list' as zero bits.
-                list.size = 0;
+                list.totalSize = 0;
                 // Associate 'control' with 'list'.
                 controls.set(control, list);
             }
@@ -52,12 +52,13 @@ issues.*/
 
                         // If the event returns a truthy value.
                         if (RESPONSE) {
-                            // Add 'file' to 'list'.
-                            list.push(file);
+                            // Associate 'attachment' with 'file'.
+                            // Add 'attachment' and 'file' to 'list'.
+                            list.set(attachment, file);
                             // (Re)calculate the size of 'list'.
-                            list.size += file.size;
                             // Trigger an onDidAddFile event.
                             onDidAddFile(file, list, control);
+                            list.totalSize += file.size;
                         }
                     }
                 });
