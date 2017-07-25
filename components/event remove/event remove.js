@@ -19,7 +19,7 @@ event called 'remove'. */
         function onPointerDown(event) {
             // Let 'target' be the target of the event.
             // If 'target' is a button able to remove its associated element.
-            if (event.target.matches('.delete-button')) {
+            if (target.classList.contains('js-delete-button')) {
                 // Let 'button' be 'target'.
                 const button = target;
                 // Let 'SELECTOR' be a CSS selector matching 'button's associated element.
