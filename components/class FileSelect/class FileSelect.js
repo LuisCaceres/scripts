@@ -52,12 +52,12 @@ issues.*/
 
                         // If the event returns a truthy value.
                         if (RESPONSE) {
+                            // Let 'attachment' be a representation of 'file' in HTML.
+                            const attachment = createAttachment(file);
                             // Associate 'attachment' with 'file'.
                             // Add 'attachment' and 'file' to 'list'.
                             list.set(attachment, file);
                             // (Re)calculate the size of 'list'.
-                            // Trigger an onDidAddFile event.
-                            onDidAddFile(file, list, control);
                             list.totalSize += file.size;
                         }
                     }
@@ -108,13 +108,14 @@ issues.*/
      * @param {HTMLInputElement} control - The file select control that is
      * associated with 'file'.
      */
-    function onDidAddFile(file, list, control) {
+    function createAttachment(file) {
         let row = document.querySelector('[role=row]');
         let cell = document.createElement('div');
         cell.setAttribute('role', 'gridcell');
         cell.classList.add('attachment');
         cell.textContent = file.name;
         row.append(cell);
+        return cell;
     }
 
 
