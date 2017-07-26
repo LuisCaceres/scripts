@@ -12,9 +12,6 @@ issues.*/
     // Let 'controls' be a list of links between a file select control and a list of files.
     const controls = new Map();
 
-    // Let 'SELECTOR' be a CSS selector that matches a file select control.
-    const SELECTOR = 'input[type=file]';
-
 
     /** Create and update a list of files associated with a file select control.
      * @param {Event} event
@@ -25,7 +22,7 @@ issues.*/
         const target = event.target;
 
         // If 'target' is a file select control.
-        if (target.matches(SELECTOR)) {
+        if (target.nodeName === 'INPUT' && target.type === 'file') {
             // Let 'control' be 'target'.
             const control = target;
             // If 'control' is not associated with a list of files.
