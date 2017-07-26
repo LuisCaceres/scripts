@@ -27,9 +27,10 @@ issues.*/
 
         // If 'target' is a file select control.
         if (target.nodeName === 'INPUT' && target.type === 'file') {
+            /** @type {HTMLInputElement} */
             // Let 'control' be 'target'.
             const control = target;
-            // If 'control' is not associated with a list of files.
+            // If 'control' is not associated with a list of file objects.
             if (!controls.has(control)) {
                 /** @type {[File]} */
                 // Let 'list' be an empty list of file objects.
@@ -40,13 +41,13 @@ issues.*/
                 controls.set(control, list);
             }
 
-            // Let 'list' be the list of files associated with 'control'.
+            // Let 'list' be the list of file objects associated with 'control'.
             const list = controls.get(control);
 
-            // For each file currently selected by 'control'.
+            // For each file object selected by 'control'.
             Array.from(control.files)
                 .forEach(function (file) {
-                    // Let 'file' be a file currently selected by 'control'.
+                    // Let 'file' be the current file object.
                     // If 'file' is not present in 'list'.
                     if (!isDuplicate(file.name, list)) {
                         // Fire an onWillAddFile event.
@@ -54,7 +55,7 @@ issues.*/
 
                         // If the event returns a truthy value.
                         if (RESPONSE) {
-                            // Let 'attachment' be a representation of 'file' in HTML.
+                            // Let 'attachment' be 'file' represented in HTML.
                             const attachment = createAttachment(file);
                             // Associate 'attachment' with 'file'.
                             files.set(attachment, control);
@@ -72,7 +73,7 @@ issues.*/
     /** Check if a file already exists in a list of files associated with a
      * file select control.
      * @param {String} name - The name of a file.
-     * @param {Map<HTMLElement, File>} list - A list of files associated with a
+     * @param {[File]} list - A list of files associated with a
      * file select control.
      * @returns {Boolean} - Whether a file in 'list' has the same name as
      * 'name'.
