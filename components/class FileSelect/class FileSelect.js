@@ -122,8 +122,8 @@ issues.*/
      */
     function onDidRemoveFile(event) {}
 
-    // Listen for change events originating from file select controls.
+    // Listen for change events fired at file select controls.
     window.addEventListener('change', onChange, true);
-    // Listen for remove events originating from a file.
+    // Listen for remove events fired at the file object representation in HTML.
     window.addEventListener('remove', onDidRemoveFile, true);
 }());
