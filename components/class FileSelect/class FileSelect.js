@@ -8,9 +8,13 @@ issues.*/
 (function () {
     'use strict';
 
-    /** @type {Map<HTMLInputElement, Map<HTMLElement,File>} */
-    // Let 'controls' be a list of links between a file select control and a list of files.
+    /** @type {Map<HTMLInputElement, [File]} */
+    // Let 'controls' be a map of file select controls to lists of files.
     const controls = new Map();
+
+    /** @type {Map<HTMLElement, HTMLInputElement} */
+    // Let 'files' be a map of file objects represented in HTML and file select controls.
+    const files = new Map();
 
 
     /** Create and update a list of files associated with a file select control.
@@ -27,10 +31,11 @@ issues.*/
             const control = target;
             // If 'control' is not associated with a list of files.
             if (!controls.has(control)) {
-                // Let 'list' be an empty list of files.
-                const list = new Map();
+                /** @type {[File]} */
+                // Let 'list' be an empty list of file objects.
+                const list = [];
                 // Specify the size of 'list' as zero bits.
-                list.totalSize = 0;
+                list.size = 0;
                 // Associate 'control' with 'list'.
                 controls.set(control, list);
             }
@@ -52,10 +57,11 @@ issues.*/
                             // Let 'attachment' be a representation of 'file' in HTML.
                             const attachment = createAttachment(file);
                             // Associate 'attachment' with 'file'.
-                            // Add 'attachment' and 'file' to 'list'.
-                            list.set(attachment, file);
+                            files.set(attachment, control);
+                            // Add 'file' to 'list'.
+                            list.push(file);
                             // (Re)calculate the size of 'list'.
-                            list.totalSize += file.size;
+                            list.size += file.size;
                         }
                     }
                 });
