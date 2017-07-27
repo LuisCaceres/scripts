@@ -8,8 +8,8 @@ issues.*/
 (function () {
     'use strict';
 
-    /** @type {Map<HTMLInputElement, [File]>} */
-    // Let 'controls' be an empty map of file select controls and lists of files.
+    /** @type {Map<HTMLInputElement, Map<HTMLElement,File>} */
+    // Let 'controls' be a list of links between a file select control and a list of files.
     const controls = new Map();
 
     // Let 'SELECTOR' be a CSS selector that matches a file select control.
@@ -31,9 +31,9 @@ issues.*/
             // If 'control' is not associated with a list of files.
             if (!controls.has(control)) {
                 // Let 'list' be an empty list of files.
-                const list = [];
+                const list = new Map();
                 // Specify the size of 'list' as zero bits.
-                list.size = 0;
+                list.totalSize = 0;
                 // Associate 'control' with 'list'.
                 controls.set(control, list);
             }
@@ -46,18 +46,19 @@ issues.*/
                 .forEach(function (file) {
                     // Let 'file' be a file currently selected by 'control'.
                     // If 'file' is not present in 'list'.
-                    if (!list.some(isDuplicate(file, 'name'))) {
+                    if (!isDuplicate(file.name, list)) {
                         // Fire an onWillAddFile event.
                         let RESPONSE = onWillAddFile(file, list, control);
 
                         // If the event returns a truthy value.
                         if (RESPONSE) {
-                            // Add 'file' to 'list'.
-                            list.push(file);
+                            // Let 'attachment' be a representation of 'file' in HTML.
+                            const attachment = createAttachment(file);
+                            // Associate 'attachment' with 'file'.
+                            // Add 'attachment' and 'file' to 'list'.
+                            list.set(attachment, file);
                             // (Re)calculate the size of 'list'.
-                            list.size += file.size;
-                            // Trigger an onDidAddFile event.
-                            onDidAddFile(file, list, control);
+                            list.totalSize += file.size;
                         }
                     }
                 });
@@ -65,17 +66,26 @@ issues.*/
     }
 
 
-    /** Check if a file already exists in the list of files associated with a
+    /** Check if a file already exists in a list of files associated with a
      * file select control.
-     * @param {File} fileA - The file provided.
-     * @param {String} key - The name of a property in 'file'.
-     * @returns {Function} -  The function to be passed to 
+     * @param {String} name - The name of a file.
+     * @param {Map<HTMLElement, File>} list - A list of files associated with a
+     * file select control.
+     * @returns {Boolean} - Whether a file in 'list' has the same name as
+     * 'name'.
      */
-    function isDuplicate(fileA, key) {
-        return function (fileB) {
-            // Check if the name of 'fileA' is already the name of another file.
-            return fileA[key] === fileB[key];
-        }
+    function isDuplicate(name, list) {
+        /** @type {[String]} */
+        // Let 'names' be an empty list of file names.
+        const names = [];
+        // For each file in 'list'.
+        list.forEach(function (file) {
+            // Let 'file' be the current file.
+            // Add the name of 'file' to 'names'.
+            names.push(file.name);
+        });
+        // Check if 'name' is present in 'names'.
+        return names.includes(name);
     }
 
 
@@ -98,13 +108,14 @@ issues.*/
      * @param {HTMLInputElement} control - The file select control that is
      * associated with 'file'.
      */
-    function onDidAddFile(file, list, control) {
+    function createAttachment(file) {
         let row = document.querySelector('[role=row]');
         let cell = document.createElement('div');
         cell.setAttribute('role', 'gridcell');
         cell.classList.add('attachment');
         cell.textContent = file.name;
         row.append(cell);
+        return cell;
     }
 
 
