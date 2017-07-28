@@ -8,12 +8,13 @@ issues.*/
 (function () {
     'use strict';
 
-    /** @type {Map<HTMLInputElement, Map<HTMLElement,File>} */
-    // Let 'controls' be a list of links between a file select control and a list of files.
+    /** @type {Map<HTMLInputElement, [File]} */
+    // Let 'controls' be a map of file select controls to lists of files.
     const controls = new Map();
 
-    // Let 'SELECTOR' be a CSS selector that matches a file select control.
-    const SELECTOR = 'input[type=file]';
+    /** @type {Map<HTMLElement, HTMLInputElement} */
+    // Let 'files' be a map of file objects represented in HTML and file select controls.
+    const files = new Map();
 
 
     /** Create and update a list of files associated with a file select control.
@@ -25,26 +26,28 @@ issues.*/
         const target = event.target;
 
         // If 'target' is a file select control.
-        if (target.matches(SELECTOR)) {
+        if (target.nodeName === 'INPUT' && target.type === 'file') {
+            /** @type {HTMLInputElement} */
             // Let 'control' be 'target'.
             const control = target;
-            // If 'control' is not associated with a list of files.
+            // If 'control' is not associated with a list of file objects.
             if (!controls.has(control)) {
-                // Let 'list' be an empty list of files.
-                const list = new Map();
+                /** @type {[File]} */
+                // Let 'list' be an empty list of file objects.
+                const list = [];
                 // Specify the size of 'list' as zero bits.
-                list.totalSize = 0;
+                list.size = 0;
                 // Associate 'control' with 'list'.
                 controls.set(control, list);
             }
 
-            // Let 'list' be the list of files associated with 'control'.
+            // Let 'list' be the list of file objects associated with 'control'.
             const list = controls.get(control);
 
-            // For each file currently selected by 'control'.
+            // For each file object selected by 'control'.
             Array.from(control.files)
                 .forEach(function (file) {
-                    // Let 'file' be a file currently selected by 'control'.
+                    // Let 'file' be the current file object.
                     // If 'file' is not present in 'list'.
                     if (!isDuplicate(file.name, list)) {
                         // Fire an onWillAddFile event.
@@ -52,13 +55,14 @@ issues.*/
 
                         // If the event returns a truthy value.
                         if (RESPONSE) {
-                            // Let 'attachment' be a representation of 'file' in HTML.
+                            // Let 'attachment' be 'file' represented in HTML.
                             const attachment = createAttachment(file);
                             // Associate 'attachment' with 'file'.
-                            // Add 'attachment' and 'file' to 'list'.
-                            list.set(attachment, file);
+                            files.set(attachment, control);
+                            // Add 'file' to 'list'.
+                            list.push(file);
                             // (Re)calculate the size of 'list'.
-                            list.totalSize += file.size;
+                            list.size += file.size;
                         }
                     }
                 });
@@ -69,7 +73,7 @@ issues.*/
     /** Check if a file already exists in a list of files associated with a
      * file select control.
      * @param {String} name - The name of a file.
-     * @param {Map<HTMLElement, File>} list - A list of files associated with a
+     * @param {[File]} list - A list of files associated with a
      * file select control.
      * @returns {Boolean} - Whether a file in 'list' has the same name as
      * 'name'.
@@ -125,8 +129,8 @@ issues.*/
      */
     function onDidRemoveFile(event) {}
 
-    // Listen for change events originating from file select controls.
+    // Listen for change events fired at file select controls.
     window.addEventListener('change', onChange, true);
-    // Listen for remove events originating from a file.
+    // Listen for remove events fired at the file object representation in HTML.
     window.addEventListener('remove', onDidRemoveFile, true);
 }());
