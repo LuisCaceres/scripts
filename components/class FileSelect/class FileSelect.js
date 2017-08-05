@@ -5,16 +5,20 @@ multiple files have been selected. Moreover, selecting another file clears the
 list entirely. The following piece of code addresses the aforementioned
 issues.*/
 
-(function () {
+const FileSelectControl = (function () {
     'use strict';
 
-    /** @type {Map<HTMLInputElement, [File]} */
-    // Let 'controls' be a map of file select controls to lists of files.
+    /** @type {Map<HTMLInputElement, FileSelectControl>} */
+    // Let 'instances' be a map of file select controls to instances of FileSelectControl.
+    const instances = new Map();
+
+    /** @type {Map<File, HTMLInputElement} */
+    // Let 'controls' be a map of file objects and file select controls.
     const controls = new Map();
 
-    /** @type {Map<HTMLElement, HTMLInputElement} */
-    // Let 'files' be a map of file objects represented in HTML and file select controls.
-    const files = new Map();
+    /** @type {Map<HTMLElement, File>} */
+    // Let 'views' be a map of file objects rendered in HTML and file objects.
+    const views = new Map();
 
 
     /** Create and update a list of files associated with a file select control.
@@ -30,56 +34,33 @@ issues.*/
             /** @type {HTMLInputElement} */
             // Let 'control' be 'target'.
             const control = target;
-            // If 'control' is not associated with a list of file objects.
-            if (!controls.has(control)) {
-                /** @type {[File]} */
-                // Let 'list' be an empty list of file objects.
-                const list = [];
-                // Specify the size of 'list' as zero bits.
-                list.size = 0;
-                // Associate 'control' with 'list'.
-                controls.set(control, list);
+
+            // If an instance of FileSelectControl does not map to 'control'.
+            if (!instances.has(control)) {
+                // Construct an instance of FileSelectControl that maps to 'control'.
+                new FileSelectControl(control);
             }
 
-            // Let 'list' be the list of file objects associated with 'control'.
-            const list = controls.get(control);
-
-            // For each file object selected by 'control'.
-            Array.from(control.files)
-                .forEach(function (file) {
-                    // Let 'file' be the current file object.
-                    // If 'file' is not present in 'list'.
-                    if (!isDuplicate(file.name, list)) {
-                        // Fire an onWillAddFile event.
-                        let RESPONSE = onWillAddFile(file, list, control);
-
-                        // If the event returns a truthy value.
-                        if (RESPONSE) {
-                            // Let 'attachment' be 'file' represented in HTML.
-                            const attachment = createAttachment(file);
-                            // Associate 'attachment' with 'file'.
-                            files.set(attachment, control);
-                            // Add 'file' to 'list'.
-                            list.push(file);
-                            // (Re)calculate the size of 'list'.
-                            list.size += file.size;
-                        }
-                    }
-                });
+            // Let 'instance' be the instance of FileSelectControl that maps to 'control'.
+            const instance = instances.get(control);
+            // Let 'files' be a list of file object associated with 'control'.
+            const files = control.files;
+            // Select each file object in 'files'.
+            instance.select(files);
         }
     }
 
 
-    /** Check if a file already exists in a list of files associated with a
+    /** Check if a file already exists in the list of files associated with a
      * file select control.
      * @param {String} name - The name of a file.
-     * @param {[File]} list - A list of files associated with a
+     * @param {Set<File>} list - A list of files associated with a
      * file select control.
-     * @returns {Boolean} - Whether a file in 'list' has the same name as
+     * @return {Boolean} - Whether a file in 'list' has the same name as
      * 'name'.
      */
     function isDuplicate(name, list) {
-        /** @type {[String]} */
+        /** @type {String[]} */
         // Let 'names' be an empty list of file names.
         const names = [];
         // For each file in 'list'.
@@ -93,44 +74,117 @@ issues.*/
     }
 
 
-    /** Check if the file provided will be added to the list of files.
-     * @param {File} file - The file provided.
-     * @param {[File]} list - The list of files 'file' may be added to.
-     * @param {HTMLInputElement} control - The file select control that
-     * holds 'file'.
-     * @returns {Boolean} - Whether 'file' will be added 'list'.
-     */
-    function onWillAddFile(file, list, control) {
-        return true;
-    }
-
-
-    /** Perform an action after a file has been added to the list of files.
-     * @param {File} file - The file that has just been added.
-     * @param {[File]} list - The list of files to which 'file' has just been
-     * added.
-     * @param {HTMLInputElement} control - The file select control that is
-     * associated with 'file'.
-     */
-    function createAttachment(file) {
-        let row = document.querySelector('[role=row]');
-        let cell = document.createElement('div');
-        cell.setAttribute('role', 'gridcell');
-        cell.classList.add('attachment');
-        cell.textContent = file.name;
-        row.append(cell);
-        return cell;
-    }
-
-
-    /** Perform an action after a file has been removed from the list of files.
+    /** Remove a file object from a list of file objects.
      * @param {Event} event
-     * @listens Event#remove
+     * @listens Event.type === 'remove'
      */
-    function onDidRemoveFile(event) {}
+    function onRemove(event) {
+        /** @type {Element} */
+        // Let 'target' be the element to remove.
+        const target = event.target;
+
+        // If 'target' is a file object rendered in HTML.
+        if (target.classList.contains('')) {
+            // Let 'view' be 'target'.
+            const view = target;
+            // Let 'file' be the file object associated with 'view'.
+            const file = views.get(view);
+            // Let 'control' be the file select control associated with 'file'.
+            const control = controls.get(file);
+            // Let 'list' be the list of file objects associated with 'control'.
+            const list = instances.get(control).files;
+
+            // Remove 'file' from 'list'.
+            list.delete(file);
+            // Remove 'view' and disassociate it from 'file'.
+            views.delete(view);
+            // Remove 'file' and disassociate it from 'control'.
+            controls.delete(file);
+            // Reset 'control';
+            control.value = '';
+        }
+    }
+
+
+    /** Represents a file select control.
+     * @param {HTMLInputElement} control - An input element whose type
+     * attribute has a value of file.
+     * @return {FileSelectControl}
+     */
+    function FileSelectControl(control) {
+        this.control = control;
+
+        /** @type {Set<File>} */
+        // Let 'list' be an empty list of file objects.
+        this.files = new Set();
+        // Specify the size of 'list' as zero bits.
+        this.files.totalSize = 0;
+        // Associate 'control' with this instance.
+        instances.set(control, this);
+    }
+
+
+    const prototype = FileSelectControl.prototype;
+
+
+    /** Mark each file object in a list as selected.
+     * @param {File[]} files - A list of file objects.
+     */
+    prototype.select = function (files) {
+        // Let 'list' be a list of file objects.
+        const list = this.files;
+
+        // For each file object in 'files'.
+        for (let i = 0; i < files.length; i++) {
+            // Let 'file' be the current file object.
+            const file = files[i];
+            // If 'file' is not present in 'list'.
+            if (!isDuplicate(file.name, list)) {
+                // Let 'BOOLEAN' be the result of verifing whether 'file' may be selected by the user.
+                let BOOLEAN = this.onBeforeSelect(file);
+
+                // If 'BOOLEAN' signals 'file' may be selected by the user.
+                if (BOOLEAN) {
+                    // Let 'view' be 'file' as rendered in HTML.
+                    const view = this.onSelect(file);
+                    // Associate 'view' with 'file'.
+                    views.set(view, file);
+                    // Associate 'file' with 'control'.
+                    controls.set(file, this.control);
+                    // Add 'file' to 'list'.
+                    list.add(file);
+                    // (Re)calculate the size of 'list'.
+                    list.totalSize += file.size;
+                }
+            }
+        }
+    };
+
+
+    /** Verify whether a file may be selected by the user. In other words,
+     * it checks if the file meets a certain criteria. If the file meets the
+     * criteria the file may be seleced by the user. For example, if the file
+     * exceeds a specified size limit the file may not be selected by the user.
+     * @param {File} file - A file.
+     * @return {Boolean} - Whether 'file' may selected by the user.
+     */
+    prototype.onBeforeSelect = function onBeforeSelect(file) {
+        return true;
+    };
+
+
+    /** Create a representation of a file object in HTML.
+     * @param {File} file - A file object.
+     * @return {Element} - The file object as rendered in HTML.
+     */
+    prototype.onSelect = function onSelect(file) { };
+
 
     // Listen for change events fired at file select controls.
     window.addEventListener('change', onChange, true);
-    // Listen for remove events fired at the file object representation in HTML.
-    window.addEventListener('remove', onDidRemoveFile, true);
+    // Listen for remove events fired at file objects as rendered in HTML.
+    window.addEventListener('remove', onRemove, true);
+
+
+    return FileSelectControl;
 }());
