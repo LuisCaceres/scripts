@@ -1,106 +1,112 @@
 /* Sometimes it is desired that an event is triggered in response to the removal
-of an element from the DOM tree. For example, a shopping application could intercept
-the deletion of an item from the basket and make sure the user wishes to proceeed. 
-Likewise, an application could set focus to another element once the currently 
-focused element is removed. The following piece of code implements a new type of 
-event called 'remove'. */
+of an element from the DOM tree. For example, a shopping application could
+intercept the deletion of an item from the basket and make sure the user wishes
+to proceeed with the removal. Likewise, an application could set focus to
+another element once the currently focused element is removed. The following
+piece of code implements a new type of event called 'remove'. */
 
 (function () {
     "use strict";
 
-    // creates a 'remove' event for the application to listen for
+    // Let 'removeEvent' be a remove event.
     var removeEvent = new Event('remove');
 
-    // an element that allows removal MUST be associated with a delete button. The following
-    // IIFE implements the behaviour of a delete button.
     (function () {
 
-        // once an element gains focus the program verifies if the element is a delete button
-        document.addEventListener('click', function deleteButtonDetector(event) {
+        /** Attempt to detect a button able to delete its associated element.
+         * @param {PointerEvent} event
+         */
+        function onPointerDown(event) {
+            // Let 'target' be the target of the event.
+            const target = event.target;
 
-            if (event.target.matches('.delete-button')) {
-                let deleteButton = event.target,
-                    removee;
-
-                // when the delete button is pressed the program traverses the DOM 
-                // tree in search of the elements the delete button controls
-                var removees = IDReferenceList(deleteButton.getAttribute('aria-controls'));
-                removees = new Iterator(removees);
-
-                // once found, the program removes the elements unless 'preventDefault()' was called
-                while (removee = removees.next()) {
-                    removee.dispatchEvent(removeEvent);
-                    removee.remove();
-                }
+            // If 'target' is a button able to remove its associated element.
+            if (target.classList.contains('js-delete-button')) {
+                // Let 'button' be 'target'.
+                const button = target;
+                // Let 'SELECTOR' be a CSS selector matching 'button's associated element.
+                const SELECTOR = '#' + button.getAttribute('aria-controls');
+                // Let 'element' be 'button's associated element.
+                const element = document.querySelector(SELECTOR);
+                // Fire a remove event.
+                element.dispatchEvent(removeEvent);
+                // Remove 'element'.
+                element.remove();
             }
-        });
-    })();
+        }
+
+        // Listen for pointerdown events firing anywhere in the application.
+        window.addEventListener('pointerdown', onPointerDown, true);
+    }());
 
 
-
-
-    // This IIFE implements the behaviour for an element that allows removal (removee). 
     (function () {
 
-        // once an element gains focus the program verifies if the currently focused element
-        // is associated with a delete button
-        document.addEventListener('focus', function removeeDetector(event) {
-            var activeElement = document.activeElement,
-                id;
+        /** Attempt to detect an element that may be removed.
+         * @param {FocusEvent} event
+         * @listens FocusEvent.type === 'focusin'
+         */
+        function onFocusIn(event) {
+            // Let 'target' be the target of the event.
+            const target = event.target;
+            // Let 'ID' be the value of 'target's id attribute (if any).
+            const ID = target.id;
 
-            if (id = activeElement.id) {
-                // searches for a delete button (if any)
-                let deleteButton = document.querySelector('[aria-controls*=' + id + ']');
+            // If 'ID' is a value.
+            if (ID) {
+                // Let 'SELECTOR' be a CSS selector matching a button able to remove 'target'.
+                const SELECTOR = '[aria-controls*=' + ID + ']';
+                // Let 'match' be the element that 'SELECTOR' matches (if any).
+                const match = document.querySelector(SELECTOR);
 
-                if (deleteButton) {
-                    // at this point it is clear the currently focused element allows removal
-                    let removee = activeElement;
-                    removee.deleteButton = deleteButton;
-                    removee.addEventListener('blur', blurHandler);
-                    removee.addEventListener('keydown', keydownHandler);
+                // If 'match' is an element.
+                if (match) {
+                    // Let 'element' be 'target'.
+                    const element = target;
+                    // Listen for 'focusout' events originating at 'element'.
+                    element.addEventListener('focusout', onFocusOut, true);
+                    // Listen for 'keydown' events originating at 'element'.
+                    element.addEventListener('keydown', onKeyDown, true);
                 }
             }
-        }, true);
+        }
 
 
-        var blurHandler = function blurHandler(event) {
-            var removee = this;
-            removee.removeEventListener('blur', blurHandler);
-            removee.removeEventListener('keydown', keydownHandler);
-            event.stopPropagation();
+        /** Remove event handlers associated with an element that may be
+         * removed.
+         * @param {FocusEvent} event 
+         */
+        function onFocusOut(event) {
+            /** @type {HTMLElement} */
+            // Let 'element' be an HTML element that may be removed.
+            const element = event.target;
+            // Stop listening for 'focusout' events fired at 'element'.
+            element.removeEventListener('focusout', onFocusOut, true);
+            // Stop listening for 'keydown' events fired at 'element'.
+            element.removeEventListener('keydown', onKeyDown, true);
         };
 
 
-        // an element may be removed when pressing the 'delete' key
-        var keydownHandler = function keydownHandler(event) {
-            var removee = this;
-
-            // key code represents the delete key
-            if (event.keyCode === 46) {
-
-                // notifies the application about the removal operation
-                removee.dispatchEvent(removeEvent);
-
-                // at this point it is clear the currently focused element will be removed
-                removee.remove();
-                removee.deleteButton.remove();
+        /** Remove an element when the 'DELETE' key is pressed.
+         * @param {KeyboardEvent} event
+         * @listens KeyboardEvent.type === 'keydown'
+         */
+        function onKeyDown(event) {
+            // Let 'KEY' be the key pressed.
+            const KEY = event.key;
+            // If the 'DELETE' key was pressed.
+            if (KEY === 'Delete' || KEY === 'Del') {
+                /** @type {HTMLElement} */
+                // Let 'element' be the element to remove.
+                const element = event.target;
+                // Fire a remove event.
+                element.dispatchEvent(removeEvent);
+                // Remove 'element'.
+                element.remove();
             }
         };
-    })();
 
-
-    // given a string of id values it returns an array containing elements that
-    // matching those values.   
-    function IDReferenceList(string) {
-        // let's just have one space in between references
-        return string.replace(/\s+/g, " ")
-            // let's prepend the hash sign to each reference
-            .replace(/(^|\s)(?=[A-z])/g, " #")
-            // let's get rid of extra white space 
-            .trim()
-            // let's create an array of references
-            .split(/\s/)
-            // let's map those refences to actual elements
-            .map(document.querySelector, document);
-    }
-})();
+        // Listen for focusin events originating anywhere in the application.
+        window.addEventListener('focusin', onFocusIn, true);
+    }());
+}());
