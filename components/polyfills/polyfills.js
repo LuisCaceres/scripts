@@ -77,8 +77,8 @@ if (!('remove' in Element.prototype)) {
 
 
 // NOTE: Implementation is incomplete.
-// Array.from() 
-if (!('from' in Array)) {
+// Array.from()
+if (!Array.hasOwnProperty('from')) {
     Array.from = function (arrayLike) {
         return Array.prototype.slice.call(arrayLike);
     }
