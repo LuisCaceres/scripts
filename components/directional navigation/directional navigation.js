@@ -17,7 +17,7 @@ of code enables directional navigation for a composite widget. */
     ];
 
     // Relevant ARIA roles related to a composite widget.
-    const SELECTOR = '[role=gridcell], [role=tab]';
+    const SELECTOR = '[role=gridcell], [role=menuitem], [role=tab]';
     
     
     /* Removes any event listeners.
