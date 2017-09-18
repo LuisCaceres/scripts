@@ -55,6 +55,42 @@ var Node = (function () {
         }
 
 
+        /** Return the node immediately following this node. If there is no such
+         * node, this returns null.
+         * @return {Node|null}
+         */
+        get nextSibling() {
+            // Let 'parent' be the parent node of this node.
+            const parent = this.parentNode;
+            // Let 'children' be the child nodes of 'parent'.
+            const children = parent.childNodes;
+            // Let 'INDEX' be the position of this node amongst 'children'.
+            const INDEX = children.indexOf(this);
+            // Let 'sibling' be the sibling of this node positioned immediately after 'INDEX'.
+            const sibling = children[INDEX + 1] || null;
+            // Return 'sibling'.
+            return sibling;
+        }
+
+
+        /** Return the node immediately preceding this node. If there is no such
+         * node, this returns null.
+         * @return {Node|null}
+         */
+        get previousSibling() {
+            // Let 'parent' be the parent node of this node.
+            const parent = this.parentNode;
+            // Let 'children' be the child nodes of 'parent'.
+            const children = parent.childNodes;
+            // Let 'INDEX' be the position of this node amongst 'children'.
+            const INDEX = children.indexOf(this);
+            // Let 'sibling' be the sibling of this node positioned immediately before 'INDEX'.
+            const sibling = children[INDEX - 1] || null;
+            // Return 'sibling'.
+            return sibling;
+        }
+
+
         /**
          * Returns the parent of this node. 
          * @param {Node|null}
