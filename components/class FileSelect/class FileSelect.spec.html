@@ -16,6 +16,8 @@
     <!-- loads the event constructors polyfill -->
     <script src="../polyfills/event constructors.js"></script>
     <!-- loads code to be tested. Add more script tags if necessary -->
+    <script src="../event remove/event remove.js"></script>
+    <script src="../polyfills/polyfills.js"></script>
     <script src="class FileSelect.js"></script>
     <style>
         .attachment {
@@ -29,16 +31,85 @@
 <body>
     <form multiple>
         <div role="grid">
-            <div role="row">
-            </div>
+            <div role="row"></div>
         </div>
-        <input type="file" multiple required/>
+        <input id="z0" type="file" multiple required/>
+        <div role="grid">
+            <div role="row"></div>
+        </div>
+        <input id="z1" type="file" multiple required/>
         <button type="submit">Submit!</button>
     </form>
 
     <!-- do not remove the following <div> -->
     <div id="mocha"></div>
     <script>
+        // Let 'counter' be a unique number used as part of the value of an HTML id attribute.
+        let counter = 0;
+
+        /** Create the view of a file object in HTML once the user has selected
+         * it through a file select control.
+         * @param {File} file - The file that has just been selected by the user.
+         * @return {HTMLElement} - The view of 'file' in HTML.
+         */
+        FileSelectControl.prototype.onSelect = function (file) {
+            // Let 'view' be the view of 'file'.
+            const view = document.createElement('div');
+            // Style 'view' through by CSS.        
+            view.classList.add('attachment');
+            // Make 'view' accessible to assistive technologies.
+            view.setAttribute('role', 'gridcell');
+            // Make 'view' keyboard accessible.
+            view.tabIndex = 0;
+            view.textContent = file.name;
+            
+            // Let 'button' be the button that allows the removal of 'view'.
+            const button = document.createElement('button');
+            // Style 'button' through by CSS.   
+            button.classList.add('js-remove-button');
+            button.textContent = 'Remove' + file.name;
+            button.type = 'button';
+            
+            // Make 'view' uniquely identifiable in the application. This is with the purpose of linking 'button' to 'view'.
+            view.id = 'a' + counter++;
+            // Update the status of 'button' to assistive technologies.
+            button.setAttribute('aria-controls', view.id);
+
+            // Let 'row' be the element to which 'view' will be appended.
+            const row = this.control.previousElementSibling.firstElementChild;
+            // Append 'view' to 'row'.
+            row.append(view);
+            // Append 'button' to 'view'.
+            view.append(button);
+
+            return view;
+        }
+
+        // Let 'data' be a list of key-value pairs. A key is a CSS selector matching a file select control. A value is a list of file objects selected in a previous session.
+        const data = {
+            "#z0": [ // CSS selector that matches a file select control.
+                { name: 'file1.jpeg' },
+                { name: 'file2.jpeg' }
+            ],
+            "#z1": [ // CSS selector that matches a file select control.
+                { name: 'file3.jpeg' },
+                { name: 'file4.jpeg' }
+            ],
+        };
+
+        // For each key in 'data'.
+        for (const SELECTOR in data) {
+            // Let 'SELECTOR' be the current key.
+            // Let 'control' be the file select control that 'SELECTOR' matches.
+            const control = document.querySelector(SELECTOR);
+            // Let 'instance' be a wrapper class around 'control'.
+            const instance = new FileSelectControl(control);
+            // Let 'files' be a list of file objects selected in a previous session.
+            const files = data[SELECTOR]; 
+            // Update the application so that 'files' visually appear selected on the screen.
+            instance.select(files);
+        }
+
         (function () {
             'use strict';
             describe('A group of unit tests!', function () {
