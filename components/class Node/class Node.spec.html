@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>class Node</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.css" rel="stylesheet">
+    <!-- loads test framework -->
+    <script src="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.js"></script>
+    <!-- loads a library assertion -->
+    <script src="https://cdn.rawgit.com/Automattic/expect.js/0.3.1/index.js"></script>
+    <!-- do not remove the following <script> -->
+    <script>
+        mocha.setup('bdd');
+    </script>
+    <!-- loads code to be tested. Add more script tags if necessary -->
+    <script src="class Node.js"></script>
+</head>
+
+<body>
+    <!-- do not remove the following <div> -->
+    <div id="mocha"></div>
+    <script>
+        (function () {
+            'use strict';
+            describe('A group of unit tests!', function () {
+                it('Is a unit test!', function () {
+                    expect('Hello world!').to.be('Hello world!');
+                });
+            });
+        }());
+    </script>
+    <!-- do not remove the following <script> -->
+    <script>
+        mocha.run();
+    </script>
+</body>
+
+</html>
