@@ -1,4 +1,6 @@
-const Node = (function () {
+var ventana = ventana || {};
+
+ventana.Node = (function () {
     'use strict';
 
     var ancestors = Symbol('ancestors'),
@@ -6,6 +8,7 @@ const Node = (function () {
 
     class Node {
         constructor() {
+            /** @type {[Node]} */
             this.childNodes = [];
             this[parent] = null;
         }
