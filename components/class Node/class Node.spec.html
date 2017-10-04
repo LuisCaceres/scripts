@@ -23,9 +23,47 @@
     <script>
         (function () {
             'use strict';
+
+            const root = new ventana.Node();
+            const node = new ventana.Node();
+
             describe('A group of unit tests!', function () {
-                it('Is a unit test!', function () {
-                    expect('Hello world!').to.be('Hello world!');
+                it('can append a child', function () {
+                    root.appendChild(node);
+                    expect(root.childNodes[0]).to.be(node);
+                });
+
+                it('can retrieve its first child', function () {
+                    expect(root.firstChild).to.be(node);
+                });
+
+                it('can retrieve its last child', function () {
+                    expect(root.lastChild).to.be(node);
+                });
+                
+                it('can retrieve its parent', function () {
+                    expect(root.parentNode).to.be(null);
+                    expect(node.parentNode).to.be(root);
+                });
+
+                it('can retrieve its next sibling', function () {
+                    const sibling = new ventana.Node();
+                    expect(node.nextSibling).to.be(null);
+                    root.appendChild(sibling);
+                    expect(root.nextSibling).to.be(null);
+                    expect(node.nextSibling).to.be(sibling);
+                });
+
+                it('can retrieve its previous sibling', function () {
+                    const sibling = root.lastChild;
+                    expect(sibling.previousSibling).to.be(node);
+                    expect(root.nextSibling).to.be(null);
+                    sibling.remove();
+                });
+
+                it('can remove a child', function () {
+                    root.removeChild(node);
+                    expect(root.childNodes.length).to.be(0);
                 });
             });
         }());
