@@ -71,22 +71,27 @@ ventana.Node = (function () {
             return childNodes[length - 1] || null;
         }
 
-
         /** Return the node immediately following this node. If there is no such
          * node, this returns null.
          * @return {Node|null}
          */
         get nextSibling() {
-            // Let 'parent' be the parent node of this node.
+            // Let 'parent' be the parent node of this node (if there is one).
             const parent = this.parentNode;
-            // Let 'children' be the child nodes of 'parent'.
+
+            // If this node has no parent, abort these steps and return null.
+            if (!parent) {
+                return null;
+            }
+
+            // Otherwise, let 'children' be the child nodes of 'parent'.
             const children = parent.childNodes;
             // Let 'INDEX' be the position of this node amongst 'children'.
             const INDEX = children.indexOf(this);
             // Let 'sibling' be the sibling of this node positioned immediately after 'INDEX'.
-            const sibling = children[INDEX + 1] || null;
-            // Return 'sibling'.
-            return sibling;
+            const sibling = children[INDEX + 1];
+            // Return 'sibling' if there is one, otherwise null.
+            return sibling || null;
         }
 
 
@@ -95,16 +100,22 @@ ventana.Node = (function () {
          * @return {Node|null}
          */
         get previousSibling() {
-            // Let 'parent' be the parent node of this node.
+            // Let 'parent' be the parent node of this node (if there is one).
             const parent = this.parentNode;
-            // Let 'children' be the child nodes of 'parent'.
+
+            // If this node has no parent, abort these steps and return null.
+            if (!parent) {
+                return null;
+            }
+
+            // Otherwise, let 'children' be the child nodes of 'parent'.
             const children = parent.childNodes;
             // Let 'INDEX' be the position of this node amongst 'children'.
             const INDEX = children.indexOf(this);
             // Let 'sibling' be the sibling of this node positioned immediately before 'INDEX'.
-            const sibling = children[INDEX - 1] || null;
-            // Return 'sibling'.
-            return sibling;
+            const sibling = children[INDEX - 1];
+            // Return 'sibling' if there is one, otherwise null.
+            return sibling || null;
         }
 
 
