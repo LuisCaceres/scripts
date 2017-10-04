@@ -24,46 +24,59 @@
         (function () {
             'use strict';
 
-            const root = new ventana.Node();
-            const node = new ventana.Node();
+            const parent = new ventana.Node();
+            const child = new ventana.Node();
+            const sibling = new ventana.Node();
 
             describe('A group of unit tests!', function () {
-                it('can append a child', function () {
-                    root.appendChild(node);
-                    expect(root.childNodes[0]).to.be(node);
+                it('should append a child', function () {
+                    expect(parent.childNodes.length).to.be(0);
+                    parent.appendChild(child);
+                    expect(parent.childNodes[0]).to.be(child);
                 });
 
-                it('can retrieve its first child', function () {
-                    expect(root.firstChild).to.be(node);
+                it('should retrieve its first child', function () {
+                    expect(parent.firstChild).to.be(child);
+                    expect(child.firstChild).to.be(null);
+                    expect(sibling.firstChild).to.be(null);
                 });
 
-                it('can retrieve its last child', function () {
-                    expect(root.lastChild).to.be(node);
+                it('should retrieve its last child', function () {
+                    expect(parent.lastChild).to.be(child);
+                    expect(child.lastChild).to.be(null);
+                    expect(sibling.lastChild).to.be(null);
                 });
                 
-                it('can retrieve its parent', function () {
-                    expect(root.parentNode).to.be(null);
-                    expect(node.parentNode).to.be(root);
+                it('should retrieve its parent', function () {
+                    expect(parent.parentNode).to.be(null);
+                    expect(child.parentNode).to.be(parent);
                 });
 
-                it('can retrieve its next sibling', function () {
-                    const sibling = new ventana.Node();
-                    expect(node.nextSibling).to.be(null);
-                    root.appendChild(sibling);
-                    expect(root.nextSibling).to.be(null);
-                    expect(node.nextSibling).to.be(sibling);
+                it('should retrieve its next sibling', function () {
+                    expect(parent.nextSibling).to.be(null);
+                    expect(child.nextSibling).to.be(null);
+                    parent.appendChild(sibling);
+                    expect(child.nextSibling).to.be(sibling);
                 });
 
-                it('can retrieve its previous sibling', function () {
-                    const sibling = root.lastChild;
-                    expect(sibling.previousSibling).to.be(node);
-                    expect(root.nextSibling).to.be(null);
-                    sibling.remove();
+                it('should retrieve its previous sibling', function () {
+                    expect(parent.previousSibling).to.be(null);
+                    expect(child.previousSibling).to.be(null);
+                    expect(sibling.previousSibling).to.be(child);
                 });
 
-                it('can remove a child', function () {
-                    root.removeChild(node);
-                    expect(root.childNodes.length).to.be(0);
+                it('should remove a child', function () {
+                    expect(parent.childNodes.length).to.be(2);
+                    parent.removeChild(sibling);
+                    expect(parent.childNodes.length).to.be(1);
+                    expect(sibling.parentNode).to.be(null);
+                });
+
+                it('should remove itself', function () {
+                    expect(parent.childNodes.length).to.be(1);
+                    child.remove();
+                    expect(parent.childNodes.length).to.be(0);
+                    expect(child.parentNode).to.be(null);
                 });
             });
         }());
