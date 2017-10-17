@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>navigation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.css" rel="stylesheet">
+    <!-- loads test framework -->
+    <script src="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.js"></script>
+    <!-- loads a library assertion -->
+    <script src="https://cdn.rawgit.com/Automattic/expect.js/0.3.1/index.js"></script>
+    <!-- do not remove the following <script> -->
+    <script>
+        mocha.setup('bdd');
+    </script>
+    <!-- loads the event constructors polyfill -->
+    <script src="../polyfills/event constructors.js"></script>
+    <!-- loads code to be tested. Add more script tags if necessary -->
+    <script src="../class Iterator/class Iterator.js"></script>
+    <script src="../class Node/class Node.js"></script>    
+    <script src="../directional navigation/directional navigation.js"></script>
+    <script src="menu.js"></script>
+    <script src="behaviour.js"></script>
+    <style>
+        [aria-haspopup]::after {
+            content: '+';
+            display: inline;
+            padding: 0 16px;
+        }
+
+        [role=menu] {
+            display: none;
+        }
+
+        [aria-expanded=true]+[role=menu] {
+            display: block;
+            background: lightgray;
+            position: absolute;
+        }
+
+        [role=menu]>[role=menu] {
+            left: 100%;
+        }
+
+        [role=menubar] {
+            background: gray;
+        }
+
+        [role=menuitem] {
+            padding: 0 16px;
+        }
+
+        [role=menubar]>[role=menuitem] {
+            display: inline;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- do not remove the following <div> -->
+    <div id="mocha"></div>
+    <script>
+        (function () {
+            'use strict';
+
+            // Let 'data' be
+            const data = {
+                'File': {
+                    'New File': null,
+                    'New Window': null,
+                    'Open File': null,
+                    'Open Folder': null,
+                    'Open Recent': {
+                        'Reopen Closed Editor': null,
+                        'File 1': null,
+                        'File 2': null,
+                        'File 3': null,
+                        'File 4': null,
+                        'File 5': null,
+                    },
+                    'Save': null,
+                    'Save As': null,
+                    'Save All': null,
+                    'Auto Save': null,
+                    'Preferences': {
+                        'Settings': null,
+                        'Keyboard Shortcuts': null,
+                        'Keymap Extensions': null,
+                        'User Snippets': null,
+                        'Color Theme': null,
+                        'File Icon Theme': null,
+                    }
+                },
+                'Edit': null,
+                'Selection': null,
+                'View': null,
+                'Go': {
+                    'E1': null,
+                    'E2': {
+                        'E21': null,
+                        'E22': null
+                    },
+                    'E3': null
+                },
+                'Debug': null,
+                'Tasks': null,
+                'Help': null,
+            };
+
+            const menu = ventana.createMenu(data);
+            menu.view.setAttribute('role', 'menubar');
+            document.body.append(menu.view);
+
+            console.log(menu);
+
+            describe('A group of unit tests!', function () {
+                it('Is a unit test!', function () {
+                    expect('Hello world!').to.be('Hello world!');
+                });
+            });
+        }());
+    </script>
+    <!-- do not remove the following <script> -->
+    <script>
+        mocha.run();
+    </script>
+</body>
+
+</html>
