@@ -93,7 +93,8 @@
             ],
             "#z1": [ // CSS selector that matches a file select control.
                 { name: 'file3.jpeg' },
-                { name: 'file4.jpeg' }
+                { name: 'file4.jpeg' },
+                { name: 'file5.jpeg' },                
             ],
         };
 
@@ -113,7 +114,24 @@
         (function () {
             'use strict';
             describe('A group of unit tests!', function () {
-                it('Is a unit test!');
+                it('should create a view for each file selected in a previous session.', function () {
+                    // For each key in 'data'.
+                    for (const SELECTOR in data) {
+                        // Let 'SELECTOR' be the current key.
+                        // Let 'control' be the file select control that 'SELECTOR' matches.
+                        const control = document.querySelector(SELECTOR);
+                        // Let 'files' be a list of file objects selected in a previous session.
+                        const files = data[SELECTOR];
+                        // Let 'NUMBER_OF_FILES' the number of items in 'files'.
+                        const NUMBER_OF_FILES = files.length;
+                        // Let 'views' be a list of the views of 'files'.
+                        const views = control.previousElementSibling.querySelectorAll('.attachment');
+                        // Let 'NUMBER_OF_VIEWS' the number of items in 'views'.                        
+                        const NUMBER_OF_VIEWS = views.length;
+
+                        expect(NUMBER_OF_FILES).to.equal(NUMBER_OF_VIEWS);
+                    }
+                });
             });
         }());
     </script>
