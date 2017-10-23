@@ -105,27 +105,7 @@
         if ('MutationObserver' in window) {
             var mo = new MutationObserver(this.maybeHideModal.bind(this));
             mo.observe(dialog, { attributes: true, attributeFilter: ['open'] });
-        } else {
-            // IE10 and below support. Note that DOMNodeRemoved etc fire _before_ removal. They also
-            // seem to fire even if the element was removed as part of a parent removal. Use the removed
-            // events to force downgrade (useful if removed/immediately added).
-            var removed = false;
-            var cb = function () {
-                removed ? this.downgradeModal() : this.maybeHideModal();
-                removed = false;
-            }.bind(this);
-            var timeout;
-            var delayModel = function (ev) {
-                if (ev.target !== dialog) { return; }  // not for a child element
-                var cand = 'DOMNodeRemoved';
-                removed |= (ev.type.substr(0, cand.length) === cand);
-                window.clearTimeout(timeout);
-                timeout = window.setTimeout(cb, 0);
-            };
-            ['DOMAttrModified', 'DOMNodeRemoved', 'DOMNodeRemovedFromDocument'].forEach(function (name) {
-                dialog.addEventListener(name, delayModel);
-            });
-        }
+        } 
         // Note that the DOM is observed inside DialogManager while any dialog
         // is being displayed as a modal, to catch modal removal from the DOM.
 
