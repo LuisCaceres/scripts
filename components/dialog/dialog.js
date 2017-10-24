@@ -43,19 +43,6 @@
     }
 
     /**
-     * Blur the specified element, as long as it's not the HTML body element.
-     * This works around an IE9/10 bug - blurring the body causes Windows to
-     * blur the whole application.
-     *
-     * @param {Element} el to blur
-     */
-    function safeBlur(el) {
-        if (el && el.blur && el !== document.body) {
-            el.blur();
-        }
-    }
-
-    /**
      * @param {!NodeList} nodeList to search
      * @param {Node} node to find
      * @return {boolean} whether node is inside nodeList
@@ -102,10 +89,8 @@
             dialog.returnValue = '';
         }
 
-        if ('MutationObserver' in window) {
-            var mo = new MutationObserver(this.maybeHideModal.bind(this));
-            mo.observe(dialog, { attributes: true, attributeFilter: ['open'] });
-        } 
+        var mo = new MutationObserver(this.maybeHideModal.bind(this));
+        mo.observe(dialog, { attributes: true, attributeFilter: ['open'] });
         // Note that the DOM is observed inside DialogManager while any dialog
         // is being displayed as a modal, to catch modal removal from the DOM.
 
@@ -217,7 +202,6 @@
                 query.push('[tabindex]:not([disabled]):not([tabindex=""])');  // tabindex != "", not disabled
                 target = this.dialog_.querySelector(query.join(', '));
             }
-            safeBlur(document.activeElement);
             target && target.focus();
         },
 
@@ -417,22 +401,20 @@
 
         this.forwardTab_ = undefined;
 
-        if ('MutationObserver' in window) {
-            this.mo_ = new MutationObserver(function (records) {
-                var removed = [];
-                records.forEach(function (rec) {
-                    for (var i = 0, c; c = rec.removedNodes[i]; ++i) {
-                        if (!(c instanceof Element)) {
-                            continue;
-                        } else if (c.localName === 'dialog') {
-                            removed.push(c);
-                        }
-                        removed = removed.concat(c.querySelectorAll('dialog'));
+        this.mo_ = new MutationObserver(function (records) {
+            var removed = [];
+            records.forEach(function (rec) {
+                for (var i = 0, c; c = rec.removedNodes[i]; ++i) {
+                    if (!(c instanceof Element)) {
+                        continue;
+                    } else if (c.localName === 'dialog') {
+                        removed.push(c);
                     }
-                });
-                removed.length && checkDOM(removed);
+                    removed = removed.concat(c.querySelectorAll('dialog'));
+                }
             });
-        }
+            removed.length && checkDOM(removed);
+        });
     };
 
     /**
@@ -499,7 +481,6 @@
 
         event.preventDefault();
         event.stopPropagation();
-        safeBlur(/** @type {Element} */(event.target));
 
         if (this.forwardTab_ === undefined) { return; }  // move focus only from a tab key
 
