@@ -31,8 +31,10 @@
             describe('A group of unit tests!', function () {
                 it('should append a child', function () {
                     expect(parent.childNodes.length).to.be(0);
+                    expect(parent.hasChildNodes()).to.be(false);
                     parent.appendChild(child);
                     expect(parent.childNodes[0]).to.be(child);
+                    expect(parent.hasChildNodes()).to.be(true);
                 });
 
                 it('should retrieve its first child', function () {
@@ -76,6 +78,7 @@
                     expect(parent.childNodes.length).to.be(1);
                     child.remove();
                     expect(parent.childNodes.length).to.be(0);
+                    expect(parent.hasChildNodes()).to.be(false);
                     expect(child.parentNode).to.be(null);
                 });
             });
