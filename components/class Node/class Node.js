@@ -60,6 +60,14 @@ ventana.Node = (function () {
         }
 
 
+        /** Return whether this node has children.
+         * @return {Boolean}
+         */
+        hasChildNodes() {
+            return this.childNodes.length > 0;
+        }
+
+
         /** Return the last child of this node. If there is no such
          * node, this returns null.
          * @return {Node|null}
