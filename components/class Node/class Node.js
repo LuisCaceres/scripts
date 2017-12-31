@@ -14,7 +14,7 @@ ventana.Node = (function () {
         }
 
 
-        /** Add a node to the end of the list of children of this node. 
+        /** Add a node to the end of the list of children of this node.
          * @param {Node} The node to add.
          * @return {Node} The node that has just been added.
          */
@@ -51,6 +51,39 @@ ventana.Node = (function () {
         }
 
 
+        /** Return the first node within the subtree of this node that
+         * satisfies the provided testing function. Otherwise null is returned.
+         * @param {<Function>Boolean} callback - The testing function.
+         * @return {Node|null}
+         */
+        find(callback) {
+            // Let 'node' be the result of the upcoming subtree traversal of this node.
+            var node = null;
+
+            // Traverse the subtree of this node starting with this node.
+            (function traverse(current) {
+                // Let 'current' be the current node.
+                // If 'current' satisfies 'callback'.
+                if (callback(current)) {
+                    // Abort subtree traversal.
+                    node = current;
+                    return;
+                }
+                
+                // Otherwise, let 'children' be the child nodes of 'current'.
+                // For each child node in 'children'.
+                for (let i = 0, l = current.childNodes.length; i < l; i++) {
+                    // Let 'child' be the current child node.
+                    // Recursively repeat the steps above until a node satisfies 'callback' or subtree traversal has finalised.
+                    traverse(current.childNodes[i]);
+                }
+            }(this));
+
+            // Return 'node'.
+            return node;
+        }
+        
+        
         /** Return the first child of this node. If there is no such
          * node, this returns null.
          * @return {Node|null}
