@@ -67,6 +67,18 @@
                     expect(sibling.previousSibling).to.be(child);
                 });
 
+                it('should find a node in the subtree of another node', function() {
+                    var node;
+                    node = parent.find(function (node) { return node === parent });
+                    expect(node).to.be(parent);
+                    node = parent.find(function (node) { return node === child });
+                    expect(node).to.be(child);
+                    node = parent.find(function (node) { return node === sibling });
+                    expect(node).to.be(sibling);
+                    node = child.find(function (node) { return node === parent });
+                    expect(node).to.be(null);
+                });
+
                 it('should remove a child', function () {
                     expect(parent.childNodes.length).to.be(2);
                     parent.removeChild(sibling);
