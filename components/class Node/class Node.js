@@ -82,8 +82,40 @@ ventana.Node = (function () {
             // Return 'node'.
             return node;
         }
-        
-        
+
+
+        /** Return a list of nodes within the subtree of this node that satisfy
+         * the provided testing function. Otherwise an empty list is returned.
+         * @param {<Function>Boolean} callback - The testing function.
+         * @return {[Node]|[]}
+         */
+        findAll(callback) {
+            // Let 'nodes' be an initially empty list of nodes.
+            const nodes = [];
+
+            // Traverse the subtree of this node starting with this node.
+            (function traverse(node) {
+                // Let 'node' be the current node.
+                // If 'node' satisfies 'callback'.
+                if (callback(node)) {
+                    // Add 'node' to 'nodes'.
+                    nodes.push(node);
+                }
+
+                // Let 'children' be the child nodes of 'nodes'.
+                // For each child node in 'children'.
+                for (let i = 0, l = node.childNodes.length; i < l; i++) {
+                    // Let 'child' be the current child node.
+                    // Recursively repeat the steps above until subtree traversal has finalised.
+                    traverse(node.childNodes[i]);
+                }
+            }(this));
+
+            // Return 'node'.
+            return nodes;
+        }
+
+
         /** Return the first child of this node. If there is no such
          * node, this returns null.
          * @return {Node|null}
