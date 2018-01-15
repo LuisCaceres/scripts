@@ -57,30 +57,33 @@ ventana.Node = (function () {
          * @return {Node|null}
          */
         find(callback) {
-            // Let 'node' be the result of the upcoming subtree traversal of this node.
-            var node = null;
+            var result = null;
 
-            // Traverse the subtree of this node starting with this node.
-            (function traverse(current) {
-                // Let 'current' be the current node.
-                // If 'current' satisfies 'callback'.
-                if (callback(current)) {
-                    // Abort subtree traversal.
-                    node = current;
-                    return;
-                }
-                
-                // Otherwise, let 'children' be the child nodes of 'current'.
-                // For each child node in 'children'.
-                for (let i = 0, l = current.childNodes.length; i < l; i++) {
-                    // Let 'child' be the current child node.
-                    // Recursively repeat the steps above until a node satisfies 'callback' or subtree traversal has finalised.
-                    traverse(current.childNodes[i]);
+            // Traverse the subtree of this node.
+            (function traverse(currentNode) {
+                // Let `currentNode` be the current node.
+                // Let `childNodes` be a list of `currentNode`'s child nodes.
+                const childNodes = currentNode.childNodes;
+                // For each child node in `childNodes`.
+                for (let i = 0, l = childNodes.length; i < l && !result; i++) {
+                    // Let `childNode` be the current child node.
+                    const childNode = childNodes[i];
+
+                    // If `childNode` meets the criteria specified by `callback`.
+                    if (callback(childNode)) {
+                        // Let `result` be `child`.
+                        result = childNode;
+                        // Abort subtree traversal.
+                    }
+                    // Otherwise, recursively repeat the steps above until a node meets the criteria specified by `callback` or subtree traversal has finalised.
+                    else {
+                        traverse(childNode);
+                    }
                 }
             }(this));
 
-            // Return 'node'.
-            return node;
+            // Return `result`.
+            return result;
         }
 
 
@@ -90,29 +93,29 @@ ventana.Node = (function () {
          * @return {[Node]|[]}
          */
         findAll(callback) {
-            // Let 'nodes' be an initially empty list of nodes.
-            const nodes = [];
+            // Let `result` be an initially empty list of nodes.
+            const result = [];
 
-            // Traverse the subtree of this node starting with this node.
-            (function traverse(node) {
-                // Let 'node' be the current node.
-                // If 'node' satisfies 'callback'.
-                if (callback(node)) {
-                    // Add 'node' to 'nodes'.
-                    nodes.push(node);
-                }
-
-                // Let 'children' be the child nodes of 'nodes'.
-                // For each child node in 'children'.
-                for (let i = 0, l = node.childNodes.length; i < l; i++) {
-                    // Let 'child' be the current child node.
+            // Traverse the subtree of this node.
+            (function traverse(currentNode) {
+                // Let `currentNode` be the current node.
+                // Let `childNodes` be a list of `currentNode`'s child nodes.
+                // For each child node in `childNodes`.
+                for (let i = 0, l = currentNode.childNodes.length; i < l; i++) {
+                    // Let `child` be the current child node.
+                    const child = currentNode.childNodes[i];
+                    // If `childNode` meets the criteria specified by `callback`.
+                    if (callback(child)) {
+                        // Add `child` to `result`.
+                        result.push(child);
+                    }
                     // Recursively repeat the steps above until subtree traversal has finalised.
-                    traverse(node.childNodes[i]);
+                    traverse(currentNode.childNodes[i]);
                 }
             }(this));
 
-            // Return 'node'.
-            return nodes;
+            // Return `result`.
+            return result;
         }
 
 
