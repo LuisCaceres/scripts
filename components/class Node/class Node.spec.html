@@ -27,6 +27,9 @@
             const parent = new ventana.Node();
             const child = new ventana.Node();
             const sibling = new ventana.Node();
+            const descendant1 = new ventana.Node();
+            const descendant2 = new ventana.Node();
+            const descendant3 = new ventana.Node();
 
             describe('A group of unit tests!', function () {
                 it('should append a child', function () {
@@ -69,14 +72,23 @@
 
                 it('should find a node in the subtree of another node', function() {
                     var node, nodes;
-                    expect(node).to.be(parent);
                     node = parent.find(node => node === parent);
+                    expect(node).not.to.be(parent);
                     node = parent.find(node => node === child);
                     expect(node).to.be(child);
                     node = parent.find(node => node === sibling);
                     expect(node).to.be(sibling);
                     node = child.find(node => node === parent);
                     expect(node).to.be(null);
+
+                    child.appendChild(descendant1);
+                    child.appendChild(descendant2);
+                    child.appendChild(descendant3);
+                    node = child.find(node => node === descendant1 || node === sibling);
+                    expect(node).to.be(descendant1);
+
+                    nodes = parent.findAll(node => node === parent);
+                    expect(nodes.length).to.be(0);
 
                     nodes = parent.findAll(node => node === child || node === sibling);
                     expect(nodes.length).to.be(2);
