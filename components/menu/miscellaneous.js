@@ -74,11 +74,10 @@ const Menu = (function() {
                 const menuItems = labels[label];
                 // Recursively run the previous steps to append 'menuItems' to 'submenu'.
                 const submenu = Menu(menuItems);
+                submenu.setAttribute('aria-expanded', false);
 
                 // Append 'submenu' to ' menu'.
                 menu.append(submenu);
-                // Give assistive technologies more context about `menu-item`.
-                menuItem.setAttribute('aria-expanded', false);
                 menuItem.setAttribute('aria-haspopup', true);
             }
         }
