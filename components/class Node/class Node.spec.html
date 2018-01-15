@@ -69,13 +69,13 @@
 
                 it('should find a node in the subtree of another node', function() {
                     var node, nodes;
-                    node = parent.find(function (node) { return node === parent });
                     expect(node).to.be(parent);
-                    node = parent.find(function (node) { return node === child });
+                    node = parent.find(node => node === parent);
+                    node = parent.find(node => node === child);
                     expect(node).to.be(child);
-                    node = parent.find(function (node) { return node === sibling });
+                    node = parent.find(node => node === sibling);
                     expect(node).to.be(sibling);
-                    node = child.find(function (node) { return node === parent });
+                    node = child.find(node => node === parent);
                     expect(node).to.be(null);
 
                     nodes = parent.findAll(node => node === child || node === sibling);
