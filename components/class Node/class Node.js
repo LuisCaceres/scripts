@@ -49,6 +49,14 @@ ventana.Node = (function () {
             // Return 'node'.
             return node;
         }
+        
+        
+        /** Return the number of edges from the root node to this node.
+         * @return {Number}
+         */
+		get depth() {
+			return this[ancestors].length;
+		}
 
 
         /** Return the first node within the subtree of this node that
