@@ -98,6 +98,15 @@
                     expect(nodes.length).to.be(0);
                 });
 
+                it('should report the depth of a node', function () {
+                    expect(parent.depth).to.be(0);
+                    expect(child.depth).to.be(1);
+                    expect(sibling.depth).to.be(1);
+                    expect(descendant1.depth).to.be(2);
+                    expect(descendant2.depth).to.be(2);
+                    expect(descendant3.depth).to.be(2);
+                });
+
                 it('should remove a child', function () {
                     expect(parent.childNodes.length).to.be(2);
                     parent.removeChild(sibling);
