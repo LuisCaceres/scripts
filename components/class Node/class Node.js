@@ -268,4 +268,9 @@ ventana.Node = (function () {
     return Node;
 }());
 
-// Note: childNodes should not be an instance of Array
+/* 
+Note: `Node.prototype.childNodes` should not return an instance of Array.
+Note: Accessing this class's properties through its prototype should throw an 
+      error. For example, `Node.prototype.depth` currently returns `0` which
+      does not make any sense. 
+*/
