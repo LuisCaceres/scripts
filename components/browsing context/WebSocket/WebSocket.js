@@ -65,6 +65,8 @@ class WebSocket extends EventTarget {
             bufferedAmount: 0,
             readyState: readyState.CONNECTING,
         });
+
+        connect.call(this);
     }
 
     /** Return the number of bytes of application data (UTF-8 text and binary
@@ -100,6 +102,29 @@ class WebSocket extends EventTarget {
      */
     send(data) {
         console.log(data);
+    }
+}
+
+
+/** Attempt to establish a WebSocket connection. */
+async function connect() {
+    // Let `promise` be a promise that waits on the outcome of this attempt.
+    // Let `outcome` indicate either the success or failure of this attempt.
+    // Resolve `promise` with `outcome`.
+    // Update this websocket's ready state taking `outcome` into account.
+    // Fire an event taking `outcome` into account.
+    try {
+        await new Promise(function (resolve, reject) {
+            const outcome = Math.round(Math.random());
+            setTimeout(function () { 
+                outcome ? resolve() : reject();
+            }, outcome);
+        });
+        instances.get(this).readyState = readyState.OPEN;
+        this.dispatchEvent(event.OPEN);
+    } catch (error) {
+        instances.get(this).readyState = readyState.CLOSED;
+        this.dispatchEvent(event.CLOSED);
     }
 }
 
