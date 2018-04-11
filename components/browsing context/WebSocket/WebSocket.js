@@ -1,3 +1,4 @@
+import Event from './../000 Event/Event';
 import EventTarget from './../000 EventTarget/EventTarget';
 
 const instances = new WeakMap();
@@ -10,6 +11,11 @@ const readyState = {
 };
 
 Object.freeze(readyState);
+
+const event = {
+    OPEN: new Event('open'),
+    CLOSED: new Event('closed'),
+}
 
 class WebSocket extends EventTarget {
     
@@ -85,8 +91,13 @@ class WebSocket extends EventTarget {
      * @param {Number} [code] The WebSocket connection close code.
      * @param {String} [reason] The WebSocket connection close reason.
      */
-    close(code, reason) {
-        readyState.set(this, readyState.CLOSING);
+    async close(code, reason) {
+        instances.get(this).readyState = readyState.CLOSING;
+        await new Promise(function (resolve) {
+            setTimeout(resolve, 0);
+        });
+        instances.get(this).readyState = readyState.CLOSED;
+        this.dispatchEvent(event.CLOSED);
     }
 
     /** Return the state of the WebSocket object's connection. It can have one 
