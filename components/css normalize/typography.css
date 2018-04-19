@@ -1,0 +1,69 @@
+/* The following is an experiment. The motivation for this arises from one big
+issue. Over and over again typographic declarations are defined everywhere
+instead of centralizing them in one file. Elements should be subject to those
+declarations through the use of the class selectors below. declarations. */
+
+/* Choose a royalty-free font from Google Fonts */
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500');
+
+.typography-1 {
+    font-family: 'Roboto';
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+@media (min-width: 769px) {
+    .typography-1 {
+        font-size: 50px;
+    }
+}
+
+.typography-2 {
+    font-family: Roboto;
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 40px;
+}
+
+.typography-3 {
+    font-family: Roboto;
+    font-size: 26px;
+    font-weight: 300;
+    line-height: 36px;
+}
+
+.typography-4 {
+    font-family: Roboto;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 34px;
+}
+
+.typography-5 {
+    font-family: Roboto;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.typography-6 {
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 26px;
+}
+
+.typography-7 {
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 26px;
+}
+
+.typography-8 {
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 26px;
+}
