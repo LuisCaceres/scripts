@@ -1,7 +1,7 @@
 /* The following is an experiment. The motivation for this arises from one big
 issue. Over and over again typographic declarations are defined everywhere
-instead of centralizing them in one file. Elements should be subject to those
-declarations through the use of the class selectors below. declarations. */
+instead of centralizing them in one file. To apply typography styles ONLY the
+class tokens below must be used. */
 
 /* Choose a royalty-free font from Google Fonts */
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,500');
