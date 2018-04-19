@@ -64,6 +64,33 @@ if (!('matches' in Element.prototype)) {
 
 
 
+
+// Document.prototype.prepend()
+// DocumentFragment.prototype.prepend()
+// Element.prototype.prepend()
+// TO DO: Return value not yet specified as mandated by the spec.
+(function (prototypes) {
+    const fragment = document.createDocumentFragment();
+
+    /** Insert `nodes` before the first child of this node, while replacing
+     * strings in `nodes` with equivalent text nodes.
+     */
+    function prepend() {
+        DocumentFragment.prototype.append.apply(fragment, arguments);
+        this.insertBefore(fragment, this.firstChild);
+    }
+
+    prototypes.forEach(function (prototype) {
+        if ('prepend' in prototype === false) {
+            prototype.prepend = prepend;
+        }
+    });
+
+}([Document.prototype, DocumentFragment.prototype, Element.prototype]));
+
+
+
+
 // Element.prototype.remove()
 if (!('remove' in Element.prototype)) {
     Element.prototype.remove = function () {
