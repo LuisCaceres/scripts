@@ -1,3 +1,23 @@
+luis.castillo@visionaustralia.org
+You cannot access this right now
+Your sign-in was successful but does not meet the criteria to access this resource. For example, you might be signing in from a browser, app, or location that is restricted by your admin.
+Sign out and sign in with a different account
+More details
+
+
+Error Code: 53003
+Request Id: e967519f-4d98-4796-922e-0db042238a00
+Correlation Id: 019827f4-372b-7726-8110-db46f130cd8f
+Timestamp: 2025-07-20T13:20:49.231Z
+App name: Microsoft Teams Web Client
+App id: 5e3ce6c0-2b1f-4285-8d4b-75ee78787346
+IP address: 201.108.8.42
+Device identifier: ba99cc29-76ce-4b74-adaa-dbc6e693c4fd
+Device platform: Windows 10
+Device state: DomainJoined
+
+
+
 This is a list of scripts that implement various pieces of functionality commonly
 found across the World Wide Web.
 
